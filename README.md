@@ -31,5 +31,66 @@ New note → `Ctrl+P` → *Templates: Insert template* → Concept / Lecture / C
 
 Example: [[RAG]]
 
+## Setup: PC and Android (sync through a private GitHub repo)
+
+Goal: edit on the PC, read and edit on the phone, with the laptop switched off. GitHub is the middle. Steps written from how these tools work; I ran the PC side (repo created and pushed), **I did not run the Android side**, so treat it as a guide and expect small differences.
+
+### 0. Once, on any computer
+1. Install [Obsidian](https://obsidian.md) and [Git](https://git-scm.com/downloads).
+2. Make a free GitHub account.
+3. Create a **private** repo (empty, no README). Private matters: notes are personal.
+4. Make a **personal access token**: GitHub → Settings → Developer settings → Personal access tokens → *Tokens (classic)* → scope `repo`. Copy it once and keep it in a password manager. It works like a password. Never put it in a note or the repo.
+
+### 1. PC (Windows / Mac / Linux)
+**Option A: share this vault.** In the vault folder:
+```bash
+git init -b main
+git add -A
+git commit -m "first commit"
+git remote add origin https://github.com/YOUR-NAME/YOUR-REPO.git
+git push -u origin main
+```
+(If the GitHub CLI `gh` is installed: `gh repo create YOUR-REPO --private --source . --push` does the same in one line.) Windows asks you to sign in on the first push; use your username and the token as the password, or the browser sign-in.
+
+**Option B: you got this vault from someone else.** Clone it, then open the folder in Obsidian (*Open folder as vault*):
+```bash
+git clone https://github.com/THEIR-NAME/THEIR-REPO.git
+```
+Private repo? The owner must add you as a collaborator first. To keep your own copy separate, fork it or push it to a new repo of your own.
+
+**Then in Obsidian:** Settings → Community plugins → turn off Restricted mode → Browse → install **Spaced Repetition** (flashcards; the notes use its card syntax) and **Obsidian Git** (sync). In Obsidian Git settings you can set auto commit-and-sync every N minutes, or run *Obsidian Git: Commit-and-sync* from `Ctrl+P`.
+
+Put a `.gitignore` in the vault root so device-only files do not clash between PC and phone. This vault uses:
+```text
+.obsidian/workspace.json
+.obsidian/workspaces.json
+.obsidian/cache
+.claude/
+.trash/
+```
+Add folders you do not want online (big downloads, other people's repos) the same way.
+
+### 2. Android
+1. Install **Obsidian** from Google Play.
+2. Create a folder for the vault, then in Obsidian: *Open folder as vault* (or *Create new vault* in that folder). Turn off Restricted mode for community plugins and install **Obsidian Git** (and **Spaced Repetition**).
+3. Get the notes onto the phone. Easiest: in Obsidian Git on the phone, run *Clone an existing remote repo* and paste the HTTPS address `https://github.com/YOUR-NAME/YOUR-REPO.git`. When it asks, give your GitHub username and the **token** as the password.
+4. Daily use: **pull before you start**, **commit and push when you finish** (*Obsidian Git: Pull*, then *Commit-and-sync*). Auto sync on a timer works but is less reliable on mobile.
+
+Known limits of Obsidian Git on Android (from the plugin's own mobile notes as I remember them, not tested here):
+- Only the HTTPS address with a token works. SSH keys do not.
+- It uses a pure-JavaScript Git, so a big vault (hundreds of MB, many images) can be slow or run out of memory. This vault is about 44 MB; I did not test it on a phone.
+- Merge conflicts are hard to fix on a phone. Avoid editing the **same note** on both devices before syncing.
+
+### 3. Habits that avoid trouble
+- **One device at a time.** Sync (pull, then push) before you switch devices.
+- **Flashcard schedules live inside notes** (`<!--SR:...-->` lines). Reviewing on the phone changes those notes; sync, so the PC gets the schedule and no progress is lost.
+- If a sync stops with a conflict, open the note, keep the right parts, delete the three Git marker lines (one starts with seven `<`, one is a line of equals signs, one starts with seven `>`), then commit and sync again.
+- If Obsidian Git on the phone is too fragile, other ways to share the folder: **Syncthing** (free, phone-to-PC directly, but the PC must be on), or a cloud folder with the *Remotely Save* plugin (OneDrive, Dropbox, S3). Not tested here.
+
+### 4. Sharing the vault with others
+- **Read-only for friends:** add them to the private repo as collaborators (Settings → Collaborators), or make the repo public. A public repo shows every note and picture to everyone, so check the pictures' licences first (each caption names its licence).
+- **Never commit** tokens, passwords or personal files. Check `git status` before the first push. If a secret gets pushed, change it at once; deleting the file later does not remove it from history.
+- Third-party material (for example a copy of a course's code) may not be yours to share. This vault keeps such copies out of Git.
+
 ## Indexes
 Start here to find any note: [[ML and LLM Index]] · [[Programming Index]] · [[Math Index]] · [[Algorithms Index]] · [[Projects Index]] · [[Research Index]] · [[Books Index]] · courses: [[CME 295]] · [[Machine Learning Specialization]]
