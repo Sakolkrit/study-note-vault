@@ -1,0 +1,9 @@
+﻿# third-party course repo copy (106 MB, not notes)
+50-Courses/*/source-repo/
+# per-device Obsidian state
+.obsidian/workspace.json
+.obsidian/workspaces.json
+.obsidian/cache
+# Claude Code local files
+.claude/
+.trash/
