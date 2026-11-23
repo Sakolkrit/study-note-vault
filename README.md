@@ -90,6 +90,47 @@ Known limits of Obsidian Git on Android (from the plugin's own mobile notes as I
 - It uses a pure-JavaScript Git, so a big vault (hundreds of MB, many images) can be slow or run out of memory. This vault is about 44 MB; I did not test it on a phone.
 - Merge conflicts are hard to fix on a phone. Avoid editing the **same note** on both devices before syncing.
 
+### 2b. Author name and email (once per device)
+Git labels every commit with a name and an email. Any values work; they are only a label. To keep your real email out of the history, use your GitHub **noreply** address: `ID+USERNAME@users.noreply.github.com` (find the ID at github.com → Settings → Emails, or ask `gh api user`).
+- **PC:** in the vault folder run `git config user.name "YOUR-NAME"` and `git config user.email "ID+USERNAME@users.noreply.github.com"`.
+- **Android:** Obsidian → Settings → Obsidian Git → *Author name for commit* and *Author email for commit* (names may differ by version). Obsidian Git asks for these the first time you pull.
+
+### 2c. Pull and push, step by step
+**Pull** = download what changed on GitHub. **Push** = upload what you changed. Pull first, edit, then push. Always in that order.
+
+**PC, with Obsidian Git (easiest):**
+1. Open the vault, press `Ctrl+P`.
+2. Type `pull`, run **Obsidian Git: Pull**. Wait for the notice "Pulled".
+3. Edit notes as usual.
+4. When done: `Ctrl+P` → **Obsidian Git: Commit-and-sync** (it commits, pulls, then pushes). Or turn on auto commit-and-sync in the plugin settings.
+
+**PC, in a terminal** (open it in the vault folder):
+```bash
+git pull
+# ...edit notes...
+git add -A
+git commit -m "describe the change"
+git push
+```
+`git status` shows what changed. If `git pull` says you have local changes, commit them first.
+
+**Android, with Obsidian Git:**
+1. Open the vault. Open any note.
+2. Open the command palette (swipe down on the note, or the ⋮ menu).
+3. Type `pull`, tap **Obsidian Git: Pull**. If asked for the author name and email, fill them in (section 2b), then run Pull again.
+4. If asked for a username and password, give your GitHub username and the **token** as the password.
+5. Wait for the "Pulled" notice. Large changes can take a while.
+6. Edit notes.
+7. When done: command palette → type `commit` → **Obsidian Git: Commit-and-sync** (or *Commit all changes*, then *Push*).
+
+**Check it worked:** edit a note on one device, push, pull on the other, and look for the change. On GitHub the repo page shows the latest commit and its time.
+
+**If a pull fails:**
+- *Authentication error:* the token is wrong, expired, or lacks the `repo` scope. Make a new one and enter it again.
+- *Local changes would be overwritten:* commit your changes first (Commit-and-sync), then pull.
+- *Merge conflict:* see the habits below. Fix the note, then commit and sync again.
+- *Nothing happens on Android:* make sure the **Git** plugin is switched on, and check you have internet.
+
 ### 3. Habits that avoid trouble
 - **One device at a time.** Sync (pull, then push) before you switch devices.
 - **Flashcard schedules live inside notes** (`<!--SR:...-->` lines). Reviewing on the phone changes those notes; sync, so the PC gets the schedule and no progress is lost.
