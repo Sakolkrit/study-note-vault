@@ -1,4 +1,27 @@
-# Vault Guide
+# 🧠 Study Vault
+
+A personal knowledge base for AI, math, LLMs and programming.
+Every idea is explained in four steps, starting at age 12.
+
+🟢 Simple → 🔵 How it works → 🟠 Technical → 🔴 Deep
+
+**Start here:** [[ML and LLM Index]] · [[RAG]] (example note) · [Setup on PC and Android](#setup-pc-and-android-sync-through-a-private-github-repo)
+
+**What is inside:** about 380 notes: concepts, courses, projects and papers. Numbers are tested in code, and anything from memory is labelled.
+
+## Contents
+- [Folders](#folders)
+- [Rules](#rules)
+- [Use](#use)
+- [Setup: PC and Android](#setup-pc-and-android-sync-through-a-private-github-repo)
+  - [0. Once, on any computer](#0-once-on-any-computer)
+  - [1. PC](#1-pc-windows--mac--linux)
+  - [2. Android](#2-android)
+  - [2b. Author name and email](#2b-author-name-and-email-once-per-device)
+  - [2c. Pull and push, step by step](#2c-pull-and-push-step-by-step)
+  - [3. Habits that avoid trouble](#3-habits-that-avoid-trouble)
+  - [4. Sharing the vault with others](#4-sharing-the-vault-with-others)
+- [Indexes](#indexes)
 
 ## Folders
 | Folder | Holds |
