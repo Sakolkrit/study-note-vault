@@ -48,18 +48,10 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: what does it cover?::NLP tasks and their scores, tokenization, token representations (word2vec), recurrent networks (RNN, LSTM), the Transformer, and an end-to-end example. (Title is the note's own label.)
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which scores are used for labels and which for generated text?::Accuracy, precision, recall and F1 for labels. BLEU, ROUGE and perplexity for generated text.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: which scores for labels and for generated text?::Accuracy, precision, recall and F1 for labels. BLEU, ROUGE and perplexity for generated text.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which families of NLP tasks are there?::Classification (sentiment, intent, language, topic), tagging of every word (part of speech, named entities, parsing) and text generation (translation, question answering, summarising).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: which NLP task families are listed?::Classification (sentiment, intent, language, topic), tagging of every word (part of speech, named entities, parsing) and text generation (translation, question answering, summarising).
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the main parts of the Transformer design?::Queries, keys and values computed efficiently with matrices, multi-head attention, positional encoding, and the encoder and the decoder with its output shifted right.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: what does the Transformer design contain?::Queries, keys and values computed efficiently with matrices, multi-head attention, positional encoding "with a trick", and the encoder and the decoder with its output shifted right.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: why must position information be added?::Attention alone does not know the order of tokens.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: what example sentence runs end to end?::"A cute teddy bear is reading." through tokenization, embeddings, position information, attention and the output layer, with a note on label smoothing as a computational trick.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 1: which papers are named?::"Attention Is All You Need" (Vaswani et al., 2017), word2vec, the Seq2Seq line of work that introduced attention in 2014, and the textbook "Super Study Guide" (Amidi et al., 2024). They were named on the slides, and the note did not read them for this lecture.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Why must position information be added to a Transformer?::Attention alone does not know the order of tokens.

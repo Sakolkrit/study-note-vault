@@ -49,20 +49,12 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: what does it cover?::Position information, layer normalization, cheaper attention, the three kinds of Transformer models, BERT, fine-tuning BERT, and distillation with variants (DistilBERT, RoBERTa).
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are four ways to give a Transformer position information?::Learned position embeddings, hard-coded ones, a linear bias added to the attention scores, and rotating the queries and keys. Rotation is now the common default, and it gives an attention weight with a long-term decay (from the course slides).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: what four answers to the position problem does it show?::Learned position embeddings, hard-coded ones, a linear bias added to the attention scores, and rotating the queries and keys. The slides call the rotation the default choice nowadays, and it gives an attention weight with a long-term decay.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which ideas make attention cheaper?::Sparse attention as in Longformer, mixing local and global attention with a sliding window, and sharing key and value heads between several query heads (grouped-query attention).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: what cheaper attention ideas appear?::Sparse attention as in Longformer, mixing local and global attention with a sliding window, and sharing key and value heads between several query heads (grouped-query attention).
+#flashcards/courses/concept #flashcards/topic/course-cme295 Name the three kinds of Transformer models.::Encoder-only (understand text), decoder-only (write text) and encoder-decoder (text to text).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: name the three kinds of Transformer models.::Encoder-only (understand text), decoder-only (write text) and encoder-decoder (text to text).
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are BERT's two proxy tasks?::Masked language modelling (hide some input tokens and predict them) and next-sentence prediction. BERT is encoder-only with WordPiece input.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: what are BERT's two proxy tasks?::Masked language modelling (hide some input tokens and predict them) and next-sentence prediction. BERT is encoder-only with WordPiece input.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: what does distillation mean here?::Training a small model to copy a big one (the soft-targets idea). DistilBERT is for efficiency and RoBERTa for performance.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: which papers are named?::"Attention Is All You Need" (recap), BERT and RoFormer (both have paper notes), plus RoBERTa and DistilBERT (named on the slides only).
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 2: the open question the note raises?::Why did decoder-only models win for general use when BERT-style models were so strong at understanding tasks?
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What does distillation mean for language models?::Training a small model to copy a big one (the soft-targets idea). DistilBERT aims at efficiency and RoBERTa, a related variant, at performance.

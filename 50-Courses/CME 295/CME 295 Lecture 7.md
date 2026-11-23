@@ -50,24 +50,16 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what does it cover?::A recap (DAPO, a GRPO variant), RAG, retrieval in two steps, measuring retrieval, tool calling, a standard protocol (MCP), agents, and safety.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the three stages of RAG?::Retrieve relevant documents by similarity, augment the prompt, generate. First a knowledge base is built (collect, chunk, embed), with hyperparameters such as embedding size and chunk size.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what are the three stages of RAG?::Retrieve relevant documents by similarity, augment the prompt, generate. First a knowledge base is built (collect, chunk, embed), with hyperparameters such as embedding size and chunk size.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the two steps of retrieval in RAG?::Candidate retrieval with embeddings (with extensions such as contextualising chunks), then ranking with a cross-encoder re-ranker.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what are the two steps of retrieval?::Candidate retrieval with embeddings (with extensions such as contextualising chunks), then ranking with a cross-encoder re-ranker.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How is retrieval measured?::Whether the right chunk was found, and reciprocal rank at k.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: how is retrieval measured?::Whether the right chunk was found, and reciprocal rank at k.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is tool calling?::The LLM picks a function and its arguments, the function runs, and the result is passed back.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what is tool calling?::The LLM picks a function and its arguments, the function runs, and the result is passed back.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Why use a standard protocol such as MCP?::A standard avoids duplicated work (every tool rewritten for every model). In the standard picture a host (for example Claude Desktop) runs a client that talks to a server.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: why a standard protocol such as MCP?::A standard avoids duplicated work (every tool rewritten for every model). The slides show the host, client and server picture with Claude Desktop as an example.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is an agent and what is ReAct?::An agent is a system that works towards a goal on its own, an LLM in a loop of thinking, acting and observing. ReAct is Reason plus Act.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what is an agent and what is ReAct?::An agent is a system that works towards a goal on its own, an LLM in a loop of thinking, acting and observing. ReAct is Reason plus Act.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: what safety risks does it name?::Risks of tools in the real world, such as data exfiltration, and remedies.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: which papers are named?::RAG (Lewis et al., 2020, named on slides), cross-encoders (SBERT.net, suggested reading), ToolSword (Ye et al., 2024) and "Towards Tool Use Alignment of Large Language Models" (Chen et al., 2024) on the safety slides, and ReAct (Yao et al.). Most were named only and not read.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 7: the open question the note raises?::How big should a chunk be, and when does a re-ranker pay for itself?
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What safety risks come with tool use?::Risks of tools in the real world, such as data exfiltration, and remedies.

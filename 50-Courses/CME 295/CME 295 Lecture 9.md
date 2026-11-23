@@ -47,18 +47,10 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: what does it cover?::A recap of lectures 1 to 8, Transformers for images, vision language models, diffusion beyond autoregressive text, trends, and ongoing challenges.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How are Transformers used for images?::Attention applied to image patches, projecting patches into vectors, the Vision Transformer, with an end-to-end example using a classification token.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: how are Transformers used for images?::Attention applied to image patches, projecting patches into vectors, the Vision Transformer, with an end-to-end example using a classification token.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the two ways to build a vision language model?::Recycle a decoder-only LLM by feeding it image embeddings (Visual Instruction Tuning), or add cross-attention layers (as in the Llama 3 report).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: what are the two vision language model methods?::Recycle a decoder-only LLM by feeding it image embeddings (Visual Instruction Tuning), or add cross-attention layers (as in the Llama 3 report).
+#flashcards/courses/concept #flashcards/topic/course-cme295 How can diffusion generate text?::Today's LLMs write one token after another. For text, mask tokens and learn to unmask them (a masked diffusion model), which can decode in fewer passes. For images, add noise and learn to remove it.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: how can diffusion generate text?::Today's LLMs write one token after another. For text, mask tokens and learn to unmask them (a masked diffusion model), which can decode in fewer passes. For images, add noise and learn to remove it.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: which ongoing challenges are listed?::Fixed weights (no continuous learning), hallucinations, personalisation, interpretability and safety, and how to keep up (arXiv, conferences, code and trending papers).
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: which papers are named?::"An Image is Worth 16x16 Words" (ViT, has a paper note), and named on slides only: "Visual Instruction Tuning", "The Llama 3 Herd of Models", "Denoising Diffusion Probabilistic Models" and an analog in-memory attention paper.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 9: the open question the note raises?::Will diffusion decoding replace next-token generation for some tasks, as the lecture hints?
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which open challenges do large language models still face?::Fixed weights (no continuous learning), hallucinations, personalisation, interpretability and safety.

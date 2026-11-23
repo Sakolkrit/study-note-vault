@@ -49,20 +49,14 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: what does it cover?::Why preference tuning, preference data, reinforcement learning in LLM terms, RLHF, PPO, challenges (best-of-N), and DPO.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Why use preferences to tune a language model?::A model can still misbehave after pretraining and fine-tuning, and it is easier to say "A is better than B" than to write the ideal answer.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: why use preferences?::A model can still misbehave after pretraining and fine-tuning, and it is easier to say "A is better than B" than to write the ideal answer.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How is reinforcement learning described in LLM terms?::The agent is the LLM and the environment is the conversation.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: how is reinforcement learning described in LLM terms?::The agent is the LLM and the environment is the conversation.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the two steps of RLHF?::Step 1, train a reward model on pairwise preferences with a pairwise preference model (the Bradley-Terry model). Step 2, reinforcement learning against that reward.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: what are the two steps of RLHF?::Step 1, train a reward model on pairwise preferences with a pairwise preference model (the slide cites the paper on incomplete block designs, the origin of the Bradley-Terry model). Step 2, reinforcement learning against that reward.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is PPO's design in RLHF?::It works with advantages, not only rewards, and has two variants: clipping the ratio between the new and old policy, and a KL penalty.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: what is PPO's design here?::It works with advantages, not only rewards, and has two variants: clipping the ratio between the new and old policy, and a KL penalty.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is best-of-N?::Sample N answers and keep the best by the reward model. It is a workaround without reinforcement learning, because RL needs a separate reward model and is hard to run.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: what is best-of-N?::Sample N answers and keep the best by the reward model. It is a workaround without reinforcement learning, because RL needs a separate reward model and is hard to run.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: how does DPO work?::Start from the PPO objective and get a supervised loss on the preference pairs, with no reward model and no RL loop. The lecture asks whether PPO-based RLHF or DPO is better, citing "Is DPO Superior to PPO for LLM Alignment?".
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 5: which papers are named?::InstructGPT, PPO ("Proximal Policy Optimization Algorithms", Schulman et al., 2017), DPO, "The rank analysis of incomplete block designs" (Bradley and Terry) and "Is DPO Superior to PPO for LLM Alignment?". Only some have paper or concept notes. The rest were named on slides and not read.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How does DPO work?::Start from the PPO objective and get a supervised loss on the preference pairs, with no reward model and no RL loop. Whether PPO-based RLHF or DPO is better is debated (the paper "Is DPO Superior to PPO for LLM Alignment?" studies it; not read).

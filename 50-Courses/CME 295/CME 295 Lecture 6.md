@@ -51,22 +51,14 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: what does it cover?::What reasoning means, benchmarks and metrics (pass@k), test-time scaling with RL, controlling the thinking, GRPO, the output-length phenomenon, the DeepSeek recipes (R1-Zero and R1), and distillation.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is the core idea of a reasoning model?::Teach the model to explain its steps before the answer. RL on checkable rewards teaches it to do so.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: what is the core idea of a reasoning model?::Teach the model to explain its steps before the answer. RL on checkable rewards teaches it to do so.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the two rewards in reasoning RL?::One checks that a reasoning chain is present (inside think tags), the other checks that the final solution is correct (a code check or a maths check), so the reward is verifiable.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: what are the two rewards in reasoning RL?::One checks that a reasoning chain is present (inside think tags), the other checks that the final solution is correct (a code check or a maths check), so the reward is verifiable.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are pass@k and consensus at k?::Pass@k is the probability that at least one of k tries is right. Consensus at k takes the majority answer of k tries.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: what are pass@k and consensus at k?::Pass@k is the probability that at least one of k tries is right. Consensus at k takes the majority answer of k tries.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How does GRPO differ from PPO?::GRPO replaces PPO's learned value baseline with a comparison inside a group of answers.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: how does GRPO differ from PPO?::GRPO replaces PPO's learned value baseline with a comparison inside a group of answers.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is test-time scaling?::Spending more tokens at test time (room to reason before answering) can raise accuracy.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: what is test-time scaling?::Spending more tokens at test time (room to reason before answering) can raise accuracy.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: R1-Zero against R1?::R1-Zero is RL on a base model. R1 is a longer recipe that adds fine-tuning stages and a reward for helpfulness and harmlessness.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: which papers are named?::DeepSeek-R1 (has a paper note), and named on slides only: DeepSeekMath (the GRPO paper), "Understanding R1-Zero-Like Training", the DeepSeek-V3 Technical Report, and "Evaluating Large Language Models Trained on Code" (the pass@k estimator).
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 6: the open question the note raises?::Why does the output length grow during RL, and is a longer answer really a better one?
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 How do DeepSeek's R1-Zero and R1 differ?::R1-Zero is RL on a base model. R1 is a longer recipe that adds fine-tuning stages and a reward for helpfulness and harmlessness.

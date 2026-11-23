@@ -45,16 +45,12 @@ status: seed
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 ML Specialization Course 3 Week 1: what does it cover?::Unsupervised learning with k-means clustering: the loop, what it minimises, starting points, and choosing $K$.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What is the k-means loop?::Pick $K$ starting centres from the data, give each example to its nearest centre, move each centre to the mean of its examples, and repeat.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What does k-means minimise?::The average squared distance from each example to its centre (the distortion). It can only go down or stay the same each step.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 How should you start k-means?::Start the centres at $K$ distinct training examples. Because k-means can end in a bad local answer, run it many times (the notes suggest this strongly for $K<10$) and keep the lowest distortion.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 How should you start k-means?::Start the centres at $K$ distinct training examples. Because k-means can end in a bad local answer, run it many times (strongly advised for $K<10$) and keep the lowest distortion.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you choose $K$?::The elbow method (plot distortion against $K$ and look for where it flattens), though the curve often has no clear elbow. Or pick the $K$ that helps the next task most.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you choose $K$ in k-means?::The elbow method (plot distortion against $K$ and look for where it flattens), though the curve often has no clear elbow. Or pick the $K$ that helps the next task most.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What uses of unsupervised learning are named?::Market segmentation, social-network analysis, organising computer clusters and astronomical data.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What is missing from the Week 1 note?::Anomaly detection is listed in the README but the notes file has no text on it, so there is none here. There is no lecture video, no transcript and no lab notebook for this week. The note's status is `seed`: one source (the older course's clustering notes).
+#flashcards/courses/concept #flashcards/topic/course-mls-3 Which uses of unsupervised learning are common?::Market segmentation, social-network analysis, organising computer clusters and astronomical data.

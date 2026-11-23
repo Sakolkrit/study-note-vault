@@ -50,20 +50,12 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: what does it cover?::What an LLM is, mixture of experts, choosing the next token, prompting, and making generation efficient.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is an LLM?::A decoder-only Transformer-based model; related terms are context length, context size and window size. Long inputs can suffer from "context rot" (named in the course slides, not read further).
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: what is an LLM?::A decoder-only Transformer-based model, with the terms context length, context size and window size. The slides add a warning about "context rot".
+#flashcards/courses/concept #flashcards/topic/course-cme295 How does a mixture of experts work?::Several expert networks and a router. It keeps the total size large but uses only a few experts per token. Training problems include routing collapse.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: how does a mixture of experts work?::Several expert networks and a router. It keeps the total size large but uses only a few experts per token. Training problems include routing collapse. Mixtral is the example for what the experts learn.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which ways of choosing the next token exist?::Greedy decoding, beam search, sampling among the top k or top p tokens, probabilities from a softmax, temperature, and guided decoding that only allows valid outputs.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: which ways of choosing the next token appear?::Greedy decoding, beam search, sampling among the top k or top p tokens, probabilities from a softmax, temperature, and guided decoding that only allows valid outputs.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What are the main ideas of prompting?::The main structure of a prompt, in-context learning (zero-shot and few-shot), chain of thought and self-consistency.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: what does the prompting section cover?::The main structure of a prompt, in-context learning (zero-shot and few-shot), chain of thought and self-consistency.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: which tricks make generation efficient?::KV cache, grouped-query attention, PagedAttention, latent attention (DeepSeek-V2), speculative decoding and multi-token prediction. Most speed-ups come from remembering and sharing work.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: which papers are named?::"Mixtral of Experts" and "Language Models are Few-Shot Learners" (both have paper notes). Named on slides only and not read: "Context Rot" (Hong et al., 2025), the PagedAttention paper, DeepSeek-V2, and "Accelerating Large Language Model Decoding with Speculative Sampling".
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 3: the open questions the note raises?::How do sampling settings interact (temperature with top-p)? When is a mixture of experts better than a dense model of the same active size?
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Which tricks make generation efficient?::KV cache, grouped-query attention, PagedAttention, latent attention (DeepSeek-V2), speculative decoding and multi-token prediction. Most speed-ups come from remembering and sharing work.

@@ -46,18 +46,14 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 ML Specialization Course 2 Week 3: what does it cover?::Deciding what to try next, evaluating a model, train/validation/test sets, bias and variance, learning curves, neural-network size, skewed classes and error metrics.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-2 Why use three data splits?::Choosing a setting (such as the polynomial degree) with the test set makes the test error too optimistic. For example 60% train, 20% cross-validation, 20% test: choose with the validation set, report with the test set.
+
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How many examples go to train, validation and test when 50 examples are split 60/20/20?::30 for training, 10 for validation and 10 for test.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 How do you diagnose high bias against high variance?::High bias (underfit): training error and validation error are both high. High variance (overfit): training error is low and validation error much higher. A larger regularization strength fixes variance and a smaller one fixes bias.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 What do learning curves tell you?::Plot errors against training-set size. With high bias more data will not help much. With high variance it likely will.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How does network size relate to bias and variance?::A smaller network tends to underfit and is cheaper. A larger one tends to overfit and costs more, and regularization is the remedy. One hidden layer is a reasonable default.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How does neural-network size relate to bias and variance?::A smaller network tends to underfit and is cheaper. A larger one tends to overfit and costs more, and regularization is the remedy. One hidden layer is a reasonable default.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 Why is plain accuracy misleading with skewed classes?::If only 0.5% of patients have a disease, a model that always says "no disease" is 99.5% accurate and useless. Use precision (of predicted positives, how many are right) and recall (of real positives, how many were found), and trade them off with the decision threshold.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How does the first lab split 50 examples?::30 training, 10 validation and 10 test, which is the 60/20/20 rule.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How was the Course 2 Week 3 note built?::No lecture video or transcript. From the repo's `Week 3/notes.pdf` (the older course's "Advice for Applying Machine Learning" and "Machine Learning System Design" notes) and two lab notebooks, rerun in a scratch copy. The first needed one edit (`import utils` changed to `import libs.utils as utils`). The 60/20/20 split and the 0.5% cancer example are examples from those notes, not rules. Transfer learning is listed in the README but no text was found.

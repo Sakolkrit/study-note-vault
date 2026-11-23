@@ -49,16 +49,12 @@ status: seed
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 ML Specialization Course 3 Week 3: what does it cover?::Reinforcement learning: the README's list (introduction, state-action value function, continuous state spaces) and one lab, a "Mars rover" on six states.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 In the six-state rover problem, what are the rewards and rules?::Six states in a row. The two end states are terminal with rewards of 100 on the left and 40 on the right (defaults). Every other step earns 0. The discount factor is 0.5 by default, and the probability of stepping the wrong way is 0.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What is the Mars rover example?::Six states in a row. The two end states are terminal with rewards (lab defaults) of 100 on the left and 40 on the right. Every other step earns 0. The lab draws values for chosen terminal rewards, a reward per step, a discount factor (default 0.5) and a probability of stepping the wrong way (default 0).
-
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What are the rover's state-action values with the defaults? (the note's own computation)::Q(left): 100, 50, 25, 12.5, 6.25, 40 for states 1 to 6. Q(right): 100, 12.5, 6.25, 10, 20, 40. Best: 100, 50, 25, 12.5, 20, 40. States 1 and 6 are terminal. (A recomputation from "reward now plus discount times the best value of where you land" gives the same table.)
+#flashcards/courses/concept #flashcards/topic/course-mls-3 What are the rover's state-action values with those defaults? (my own computation)::Q(left): 100, 50, 25, 12.5, 6.25, 40 for states 1 to 6. Q(right): 100, 12.5, 6.25, 10, 20, 40. Best: 100, 50, 25, 12.5, 20, 40. States 1 and 6 are terminal. (A recomputation from "reward now plus discount times the best value of where you land" gives the same table.)
 
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What should the rover do in each state?::Go left from states 2 to 4 and right from state 5, because 40 close by (from state 5) beats 100 far away with a discount of 0.5.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What is the value of an action in a state?::The reward now plus the discounted value of the best thing you can do afterwards.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 Why can the best direction flip?::It depends on the terminal rewards and the discount factor.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-3 Why is Week 3 the thinnest week?::No lecture video, no transcript and no notes file. The lab notebook (5 cells) and the README only. The notebook could not be rerun, because it imports `generate_visualization` from `libs/utils.py`, and the repo's copy of the file does not contain that function. The table is the note's own computation, not the lab's output. The misstep-probability case was not computed.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 Why can the best direction in the rover problem flip?::It depends on the terminal rewards and the discount factor.

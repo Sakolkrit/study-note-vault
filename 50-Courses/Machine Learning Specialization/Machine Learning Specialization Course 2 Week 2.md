@@ -47,20 +47,14 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 ML Specialization Course 2 Week 2: what does it cover?::The cost for a network, backpropagation, gradient checking, random initialisation, ReLU, softmax and multi-class, and derivative and backprop labs.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-2 What does backpropagation compute?::After a forward pass, the output error (prediction minus label) is passed backwards layer by layer using the weights and the activation's slope. Each weight's contribution is summed over all examples and divided by the number of examples (plus the regularization piece) to give the gradient.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What is gradient checking?::Compare the backpropagation gradient with a numerical estimate made by nudging a weight by a small $\epsilon$ both ways (the notes use $10^{-4}$). Turn it off before real training because it is slow.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 What is gradient checking?::Compare the backpropagation gradient with a numerical estimate made by nudging a weight by a small $\epsilon$ both ways (a typical size is $10^{-4}$). Turn it off before real training because it is slow.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 Why not start all weights at zero?::Every unit then gets the same update forever. Start from small random numbers.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 What is ReLU?::$a=\max(0,z)$, a piecewise-linear activation whose bend lets a network turn pieces on only where they are needed. It is the common hidden-layer activation.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What does softmax do and what is its loss?::Softmax turns $N$ scores into $N$ probabilities that add to 1. Its loss is the negative log of the probability given to the true class (cross-entropy). In the TensorFlow lab `from_logits=True` is used when the output layer is linear and the loss applies the softmax itself.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 What does softmax do and what is its loss?::Softmax turns $N$ scores into $N$ probabilities that add to 1. Its loss is the negative log of the probability given to the true class (cross-entropy). In TensorFlow, `from_logits=True` is used when the output layer is linear and the loss applies the softmax itself.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What numbers did the derivative lab give?::For $J=w^2$ at $w=3$, a nudge of 0.001 gives a slope of about 6.001 (exact slope 6). In the computation-graph lab $a=11$, $J=121$, $\partial J/\partial a=22$ and $\partial J/\partial w=66$.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What did the Week 2 note not find text on?::Adam is listed in the README but no text about it was found. The note's reasons for ReLU over sigmoid (speed, vanishing slopes) are its own background knowledge, not from the sources. The reason $10^{-4}$ is a good nudge size is not given.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How was the Course 2 Week 2 note built?::No lecture video or transcript. From the repo's `Week 2/notes.pdf` (the older course's "Neural Networks: Learning" notes) and five lab notebooks, rerun in a scratch copy without edits. The numbers quoted came out the same (the nudge gives 22.001 and 66.009).
+#flashcards/courses/concept #flashcards/topic/course-mls-2 For $J=w^2$ at $w=3$, what slope does a nudge of 0.001 give?::About 6.001, against the exact slope 6 (a small non-zero step gives a close estimate).

@@ -48,15 +48,13 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 ML Specialization Course 1 Week 2: what does it cover?::Multiple features, vectorization, gradient descent for many features, feature scaling, checking convergence, choosing the learning rate, feature engineering and polynomial regression.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Write the multiple-feature linear model.::$f_{\vec w,b}(\vec x)=\vec w\cdot\vec x+b$, with one weight per feature.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Why vectorize?::Writing the sum as one array operation instead of a loop makes code shorter and much faster, and lets the work run on parallel hardware such as a GPU.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 Why vectorize code?::Writing the sum as one array operation instead of a loop makes code shorter and much faster, and lets the work run on parallel hardware such as a GPU.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Why does feature scaling help gradient descent?::When features have very different ranges the cost contours are long ovals and gradient descent zigzags. Rescaling to comparable ranges speeds it up a lot.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Which two scaling methods are shown?::Divide by the maximum, and mean normalization (subtract the average, then divide by the range).
+#flashcards/courses/concept #flashcards/topic/course-mls-1 Which two feature-scaling methods are common?::Divide by the maximum, and mean normalization (subtract the average, then divide by the range).
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 How do you check that gradient descent converges?::Plot the cost against the number of iterations (the learning curve). It should keep falling. An automatic test is to stop when the cost falls by less than a small number such as 0.001 in one step, but the lecturer prefers looking at the plot.
 
@@ -64,6 +62,4 @@ status: growing
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 What is feature engineering and what is polynomial regression?::Feature engineering makes a new feature from old ones (land area from width and depth). Polynomial regression adds $x^2$ or $x^3$ as features so a "linear" model draws a curve, and then scaling matters even more.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Does scaling change the final answer for plain linear regression?::Only the speed, according to the note's own derivation. The video does not state it in the part read.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-1 How was the Week 2 note built?::From captions of playlist videos 21 to 30 (beginning and end, with some middle sections searched, so small points may be missing) and the repo's `Week 2/notes.pdf`. The Week 2 notebooks, slides, figures and labs were not read or seen.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 Does feature scaling change the final answer for plain linear regression?::Only the speed, according to my own derivation; the course material I read does not state it.

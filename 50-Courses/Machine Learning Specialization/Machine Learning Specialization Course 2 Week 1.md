@@ -46,18 +46,16 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 ML Specialization Course 2 Week 1: what does it cover?::Why plain regression struggles with many features, how a neural network of layered units answers that, and how a forward pass computes its output.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-2 Why not just add all squared feature combinations to a regression?::It explodes: about 5,000 quadratic features for 100 inputs and about 3 million for 2,500 pixel inputs (a 50 by 50 image). A neural network is offered instead. (Check: $100\cdot101/2=5050$ and $2500\cdot2501/2\approx3.1$ million.)
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What is a unit and what is a layer?::A unit is the logistic-regression recipe: weighted sum of the inputs plus a bias, then a sigmoid. Layers of units feed each other, with hidden layers between input and output.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 What is a unit and what is a layer in a neural network?::A unit is the logistic-regression recipe: weighted sum of the inputs plus a bias, then a sigmoid. Layers of units feed each other, with hidden layers between input and output.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How is the forward pass vectorised?::A layer is computed as a matrix times the previous layer's numbers, then the activation.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How is the forward pass of a layer vectorised?::A layer is computed as a matrix times the previous layer's numbers, then the activation.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 Which logic gates can single units make, and which need two layers?::Single units make AND, OR and NOR. XNOR needs two layers, which no single unit can do.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What do the Week 1 labs show?::Neurons and Layers: a unit with no activation matches linear regression and one with a sigmoid matches logistic regression. Coffee roasting with TensorFlow: a two-layer network on 200 examples of temperature and duration, 3 units in layer 1 and 1 in layer 2 (9 and 4 parameters, 13 in total). The same network with NumPy: a hand-written dense layer for the forward pass only.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 What is a neuron with no activation, and one with a sigmoid, equal to?::With no activation it matches linear regression. With a sigmoid it matches logistic regression.
+
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How many parameters does a dense network with 2 inputs, 3 units in layer 1 and 1 unit in layer 2 have?::Layer 1: $2\cdot3+3=9$ (weights plus biases). Layer 2: $3\cdot1+1=4$. Total 13.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-2 What happens with no activation between layers?::The whole network collapses to one linear function.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How was the Course 2 Week 1 note built?::No lecture video or transcript. From the repo's `Week 1/notes.pdf` (the older course's "Neural Networks: Representation" notes) and the markdown and saved outputs of three lab notebooks, which were rerun in a scratch copy (Python 3.9, TensorFlow 2.9.3) without edits. The parameter counts 9 and 4 came out the same.

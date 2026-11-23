@@ -50,20 +50,16 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 ML Specialization Course 1 Week 3: what does it cover?::Classification and why linear regression fails, logistic regression, the decision boundary, the logistic cost, gradient descent for it, overfitting, and regularization.
-
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Why is straight-line regression a poor classifier?::With answers only 0 or 1, thresholding a line at 0.5 breaks: one far-away example on the right tilts the line and moves the dividing point, although it should not change the others' classification.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 How does logistic regression make a prediction?::Compute a score $z=\vec w\cdot\vec x+b$, pass it through the sigmoid, which squeezes any number into 0 to 1, and read the output (for example 0.7) as a chance that the label is 1.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Where is the decision boundary?::The model predicts 1 when $z\ge0$, so the boundary is where $z=0$. With extra polynomial features it can be a circle or another curve.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 Where is the decision boundary of logistic regression?::The model predicts 1 when $z\ge0$, so the boundary is where $z=0$. With extra polynomial features it can be a circle or another curve.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Why a new cost for logistic regression?::The squared-error cost is not a good choice here. A different loss per example punishes confident wrong answers heavily, and the cost is its average over the training set. Because $y$ is only 0 or 1, the two cases merge into one formula.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 Why does logistic regression need a new cost?::The squared-error cost is not a good choice here. A different loss per example punishes confident wrong answers heavily, and the cost is its average over the training set. Because $y$ is only 0 or 1, the two cases merge into one formula.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Underfitting against overfitting?::Too simple underfits (high bias). Too wiggly fits the training data but fails on new data (high variance).
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 What are the three ways to fight overfitting?::Collect more data, use fewer features, or use regularization.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 How does the regularized cost work?::Add a penalty for large weights, scaled by $\lambda$. Too small a $\lambda$ still overfits. An enormous one flattens the model to a horizontal line, which underfits. By convention the bias $b$ is not penalised and the penalty is divided by $2m$.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-1 How was the Week 3 note built?::From captions of playlist videos 31 to 41 (beginning and end with some middle sections searched) and the repo's `Week 3/notes.pdf`. The notebooks, slides, figures and labs were not read or seen. The video's claim that scikit-learn has a ready-made version was not verified in that note (it does: `LogisticRegression`).

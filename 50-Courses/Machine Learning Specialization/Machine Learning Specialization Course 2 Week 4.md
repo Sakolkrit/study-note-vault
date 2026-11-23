@@ -45,22 +45,16 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 ML Specialization Course 2 Week 4: what does it cover?::Decision trees (information gain), one-hot encoding, trees in scikit-learn, random forest and XGBoost. All from labs, since the week's notes file is empty.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How does a decision tree pick its split?::By information gain: the node's entropy minus the weighted entropy after the split.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How does a tree pick its split?::By information gain: the node's entropy minus the weighted entropy after the split.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 Example: 10 animals, 5 of them cats. What is the root entropy, and the gain from a split whose weighted entropy is 0.7219?::Entropy 1.0 at the root. Gain $1-0.7219=0.2781$, the biggest of the three features tried (my rerun).
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What did the lab's entropy example give?::10 animals, 5 cats, so entropy 1.0 at the root. After splitting on ear shape the weighted entropy is 0.72, so the gain is about 0.28 (0.7219 and 0.2781 in the rerun), the biggest of the three features.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 When does a decision tree stop splitting?::At a maximum depth, a node with a single class, or a gain below a threshold.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 When does a tree stop splitting?::At a maximum depth, a node with a single class, or a gain below a threshold.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 What does one-hot encoding do?::Turns a category column into 0/1 columns, one per category. In the heart-disease example `pd.get_dummies` turned 5 category columns into 0/1 columns, taking 11 features to 20.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What does one-hot encoding do in the heart-disease lab?::`pd.get_dummies` turns 5 category columns into 0/1 columns, taking 11 features to 20.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How does a decision tree's test accuracy change as it grows deeper (heart-disease data, 918 examples: 734 train, 184 test)?::Depth 3 gives 0.8641 test, depth 4 gives 0.8696 (the peak), and a fully grown tree falls to 0.8098 test with train accuracy 1.0, which is overfitting (my rerun).
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What did the scikit-learn tree lab show?::918 examples split into 734 train and 184 test. In the rerun, depth 3 gives 0.8641 test (train 0.8583, the tree the lab keeps), depth 4 gives 0.8696 (the peak), and a fully grown tree falls to 0.8098 test with train accuracy 1.0 (overfitting). The lab text says the peak is at depth 3.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 How did a random forest and XGBoost score on the heart-disease data?::Forest (depth 8, 100 trees): 0.8913 test. XGBoost: early stopping at lowest validation log-loss 0.43936 at round 17, refit with 17 trees gives 0.9319 train and 0.8533 test (my rerun; the forest's train accuracy was 0.9210 in my rerun and 0.9264 in the saved output).
 
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What did the random forest and XGBoost labs score?::Forest (depth 8, 100 trees): 0.8913 test in both the saved output and the rerun, train 0.9264 saved and 0.9210 rerun (a library-version difference, as far as the note can tell). XGBoost: early stopping at lowest validation log-loss 0.43936 at round 17, refit with 17 trees gives 0.9319 train and 0.8533 test.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 Why is the forest comparison weak?::One run on one split. The note asks how much these numbers vary with a different split.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 What is off in the lab's prose?::It says 16 trees at the minimum and 66 rounds. The rerun shows the minimum at round 17 (counting from 0, so 18 trees) and 67 rounds (0 to 66), and the refit uses `best_iteration` = 17 trees. The lab's numbers are fine.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-2 How was the Course 2 Week 4 note built?::No lecture video or transcript, and the repo's Week 4 `notes.pdf` is a zero-byte file. From two lab notebooks and the README, rerun in a scratch copy. Two edits were needed (xgboost 2.1.4 moved `early_stopping_rounds` from `fit()` to the constructor, and the tree-drawing cell needs Graphviz, which was not installed, so it failed). The note's status is `growing` but thinly sourced.
+#flashcards/courses/concept #flashcards/topic/course-mls-2 Why is a one-run comparison of a forest with a single tree weak evidence?::It is one run on one split. How much the numbers vary with a different split was not measured.

@@ -46,20 +46,16 @@ status: seed
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 ML Specialization Course 3 Week 2: what does it cover?::Dimensionality reduction with PCA: why reduce, the idea, the steps, getting back, choosing $k$, advice, and the PCA lab.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-3 Why reduce features?::Compression (less memory, faster training) and visualisation (plot in 2 or 3 dimensions). It reduces the number of features, not examples.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 Why reduce the number of features?::Compression (less memory, faster training) and visualisation (plot in 2 or 3 dimensions). It reduces the number of features, not examples.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What is the idea of PCA, and how is it not linear regression?::Find a line (or plane) so that projecting the data onto it loses as little as possible, measured as the average squared distance from each point to its projection. PCA measures the shortest distance to the line, not the vertical one, and has no target $y$.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-3 What are the steps of PCA?::Subtract each feature's mean (and scale features with different ranges), compute the covariance matrix, take its eigenvectors with a singular value decomposition, keep the first $k$ directions, and multiply the data by those directions.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you get back from compressed data?::Multiply by the transposed directions. That gives an approximation of the original, not the original.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you get back from PCA-compressed data?::Multiply by the transposed directions. That gives an approximation of the original, not the original.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you choose $k$?::The smallest $k$ that keeps 99% of the variance, so the squared projection error over the total variation is at most 0.01. The singular values give this without trying every $k$. The notes call 99% a rule of thumb.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 How do you choose the number of components $k$ in PCA?::The smallest $k$ that keeps 99% of the variance, so the squared projection error over the total variation is at most 0.01. The singular values give this without trying every $k$. 99% is a rule of thumb.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What advice do the notes give on using PCA?::Use it mainly to speed up supervised learning on very many features. Fit it on the training set only and apply it to validation and test sets. Do not use it to fight overfitting (it ignores $y$, and regularization is better). Try the full model without PCA first.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 What advice is there on using PCA?::Use it mainly to speed up supervised learning on very many features. Fit it on the training set only and apply it to validation and test sets. Do not use it to fight overfitting (it ignores $y$, and regularization is better). Try the full model without PCA first.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-3 What did the PCA lab's example give?::Six points, two features: the first principal component keeps 99.24% of the variance and the second 0.76% (0.99244 and 0.00756, which the note also got by hand with an SVD in NumPy).
-
-#flashcards/courses/concept #flashcards/topic/course-mls-3 How much of the PCA notebook ran?::Only part. It imports `pca_utils` and `toy_dataset.csv`, which the repo does not contain, and needs `bokeh` and `plotly`. With those lines removed, 18 code cells ran and 20 failed. The lecture example matched. The interactive widget, 3D example and 1000-feature section did not run. Recommender systems are listed in the README but no source text exists.
+#flashcards/courses/concept #flashcards/topic/course-mls-3 For six points with two features, how much variance do the two principal components keep?::The first keeps 99.24% and the second 0.76% (0.99244 and 0.00756, also got by hand with an SVD in NumPy).

@@ -49,20 +49,12 @@ The slides of this lecture also carry the midterm logistics (see the course inde
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what does it cover?::Pretraining, the memory bottleneck and parallelism, FlashAttention, number precision, supervised fine-tuning (instruction tuning), benchmarks, and parameter-efficient fine-tuning (LoRA and QLoRA).
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is the paradigm shift of pretraining?::From training a model per task to training one model on language and code first. Related topics: scaling, compute counted in floating-point operations, and the cost and challenges.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what is the paradigm shift of pretraining?::From training a model per task to training one model on language and code first. The slides cover scaling, compute counted in floating-point operations, and the cost and challenges.
+#flashcards/courses/concept #flashcards/topic/course-cme295 Why is memory the bottleneck when training a large model?::A single GPU cannot hold training. Training is spread with data parallelism (ZeRO removes duplicate copies) and model parallelism.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: why is memory the bottleneck?::A single GPU cannot hold training. Training is spread with data parallelism (ZeRO removes duplicate copies) and model parallelism.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What does FlashAttention fix?::Standard attention writes a big table to slow memory. A tiled version avoids it, in the forward and the backward pass.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what does FlashAttention fix?::Standard attention writes a big table to slow memory. A tiled version avoids it, in the forward and the backward pass.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What does mixed precision training do?::It uses lower-precision floating-point numbers to go faster and use less memory.
 
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what does mixed precision training do?::It uses lower-precision floating-point numbers to go faster and use less memory. The lecture explains how a floating-point number is stored.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what is the key idea of LoRA and QLoRA?::LoRA trains two small matrices instead of the full one, and they can be swapped to swap tasks. QLoRA quantizes the frozen weights.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: which papers are named?::FlashAttention (Dao et al., 2022) and QLoRA (both have concept notes), plus the LoRA paper and the NVIDIA H100 website (cited for hardware figures), named on slides only.
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 CME 295 Lecture 4: what else is on these slides?::The midterm logistics (see the course index).
-
-#flashcards/courses/concept #flashcards/topic/course-cme295 How was this CME 295 lecture note built, and what was not seen?::From the lecture slides (PDF) read as extracted text. The note did not see the figures, any speaker notes or the recordings, and did not open the course playlist. Papers only "named on the slides" were not read. The lecture title is the note's own label, not the instructors'.
+#flashcards/courses/concept #flashcards/topic/course-cme295 What is the key idea of LoRA and QLoRA?::LoRA trains two small matrices instead of the full one, and they can be swapped to swap tasks. QLoRA quantizes the frozen weights.

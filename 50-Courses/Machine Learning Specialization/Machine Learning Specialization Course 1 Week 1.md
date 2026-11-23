@@ -50,20 +50,16 @@ status: growing
 ## Flashcards
 #flashcards/courses
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 ML Specialization Course 1 Week 1: what does it cover?::What machine learning is, supervised and unsupervised learning, the first complete algorithm (linear regression with a cost function and gradient descent), and Jupyter notebooks.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-1 Machine learning: what definition does the video attribute to Arthur Samuel?::Giving computers the ability to learn without being explicitly programmed, with his checkers program that played many games against itself.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 What definition of machine learning is attributed to Arthur Samuel?::Giving computers the ability to learn without being explicitly programmed, with his checkers program that played many games against itself.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Supervised learning: what are regression and classification?::Supervised learning learns input-to-output mappings from examples that include the right answer. Regression predicts a number (a house price). Classification predicts a category from a small set (a tumour benign or malignant). The lecturer says most of the economic value of machine learning today comes from supervised learning.
 
-#flashcards/courses/reverse #flashcards/topic/course-mls-1 Unsupervised learning here:::Data with no labels where the algorithm looks for structure. The main example is clustering. Anomaly detection and dimensionality reduction are named as later topics.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 What is unsupervised learning?::Learning from data with no labels, where the algorithm looks for structure. The main example is clustering. Anomaly detection and dimensionality reduction are other examples.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Write the one-feature linear regression model. What are $w$ and $b$?::$f_{w,b}(x)=wx+b$ with parameters $w$ and $b$, trained on (size, price) pairs.
 
-#flashcards/courses/concept #flashcards/topic/course-mls-1 What is the cost function in week 1?::Squared error averaged over the training set, $J(w,b)$. The goal is to choose $w,b$ that make it small.
+#flashcards/courses/concept #flashcards/topic/course-mls-1 What is the cost function of linear regression?::Squared error averaged over the training set, $J(w,b)$. The goal is to choose $w,b$ that make it small.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 What does gradient descent do and what does the learning rate $\alpha$ do?::It repeatedly nudges each parameter against the slope of the cost, with step size set by $\alpha$. Too small is slow, too big can fail to converge.
 
 #flashcards/courses/concept #flashcards/topic/course-mls-1 Why can gradient descent not get stuck for linear regression?::The squared-error cost is bowl-shaped (convex), so with a good learning rate it reaches the single best answer. That is not true for every model.
-
-#flashcards/courses/concept #flashcards/topic/course-mls-1 How was the Week 1 note built?::From captions of playlist videos 1 to 20, read in full only at their beginning and end and skimmed in the middle, plus the repo's `Week 1/notes.pdf` as a cross-check (older notation). The Week 1 notebook, slides, figures and labs were not read or seen. The "99% of the value" style claims are the lecturer's own words as captioned, not checked.
