@@ -7,3 +7,5 @@
 # Claude Code local files
 .claude/
 .trash/
+# Spaced Repetition plugin state (changes daily, differs per device)
+.obsidian/plugins/obsidian-spaced-repetition/data.json

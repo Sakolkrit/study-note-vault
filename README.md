@@ -90,8 +90,9 @@ Put a `.gitignore` in the vault root so device-only files do not clash between P
 .obsidian/cache
 .claude/
 .trash/
+.obsidian/plugins/obsidian-spaced-repetition/data.json
 ```
-Add folders you do not want online (big downloads, other people's repos) the same way.
+The last line is the Spaced Repetition plugin's own state file: Obsidian rewrites it every day and it differs per device, so it would cause a sync conflict each time. Add folders you do not want online (big downloads, other people's repos) the same way.
 
 ### 2. Android
 1. Install **Obsidian** from Google Play.
