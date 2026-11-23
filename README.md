@@ -73,7 +73,16 @@ Add folders you do not want online (big downloads, other people's repos) the sam
 ### 2. Android
 1. Install **Obsidian** from Google Play.
 2. Create a folder for the vault, then in Obsidian: *Open folder as vault* (or *Create new vault* in that folder). Turn off Restricted mode for community plugins and install **Obsidian Git** (and **Spaced Repetition**).
-3. Get the notes onto the phone. Easiest: in Obsidian Git on the phone, run *Clone an existing remote repo* and paste the HTTPS address `https://github.com/YOUR-NAME/YOUR-REPO.git`. When it asks, give your GitHub username and the **token** as the password.
+3. Get the notes onto the phone. Make sure the **Git** (Obsidian Git) plugin is switched **on**, not just installed. Open the command palette (swipe down on a note, or the ⋮ menu), type `clone`, and run **Obsidian Git: Clone an existing remote repo**. You are asked these things in turn. This order was reported by the vault owner from a real phone run (I did not see the screens myself); the wording may differ in other plugin versions:
+   1. **URL:** paste the HTTPS address `https://github.com/YOUR-NAME/YOUR-REPO.git`.
+   2. **Which directory to put it in:** choose the **root** of the vault (the vault folder itself). Do not type `.` or a folder name that does not exist yet; that gave a "directory does not exist" error.
+   3. **Does the phone already have a `.obsidian` config in this vault?** Answer **No**, so the repo's own settings are used.
+   4. **An authentication error appears.** This is expected the first time, because a private repo needs a login. Carry on.
+   5. **Username:** your GitHub username.
+   6. **Password:** paste the **token** from step 0, not your GitHub password.
+   7. It now downloads the repo into the vault. Wait; a few hundred files can take several minutes and may look frozen. Then restart Obsidian if the notes do not show.
+   - Do not type `git clone ...` anywhere. Obsidian is not a terminal; the command palette runs the plugin's clone for you.
+   - If you answered a prompt wrongly or it stops half way, delete the half-filled vault, create a fresh empty one, and run the clone again.
 4. Daily use: **pull before you start**, **commit and push when you finish** (*Obsidian Git: Pull*, then *Commit-and-sync*). Auto sync on a timer works but is less reliable on mobile.
 
 Known limits of Obsidian Git on Android (from the plugin's own mobile notes as I remember them, not tested here):
