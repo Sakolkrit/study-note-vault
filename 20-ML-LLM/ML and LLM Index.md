@@ -48,6 +48,7 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[AB Testing|A/B Testing]]
 - 🟠 [[Benchmarks]]
 - 🔵 [[Bias-Variance]]
+- 🔵 [[BLEU Score]]
 - 🔵 [[Calibration]]
 - 🔵 [[Chatbot Arena]]
 - 🟢 [[Confusion Matrix]]
@@ -85,11 +86,13 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[Neural Network]]
 - 🟢 [[ReLU]]
 - 🔵 [[Residual Connection]]
+- 🔵 [[Skip Connection]]
 - 🔵 [[Vanishing and Exploding Gradients]]
 - 🔵 [[Weight Initialization]]
 
 ## Training
 
+- 🔵 [[Gradient Clipping]]
 - 🔵 [[Adam Optimizer]]
 - 🔵 [[Batch Normalization]]
 - 🟠 [[Catastrophic Forgetting]]
@@ -144,6 +147,7 @@ Every concept note about machine learning, deep learning, language models and ho
 
 ## Transformers and NLP
 
+- 🔵 [[Encoder-Decoder]]
 - 🟠 [[Attention]]
 - 🟠 [[Autoregressive Generation]]
 - 🟠 [[BERT]]
@@ -183,6 +187,7 @@ Every concept note about machine learning, deep learning, language models and ho
 
 ## Alignment and reinforcement learning
 
+- 🔴 [[Alignment]]
 - 🔵 [[Bellman Equation]]
 - 🔵 [[Bradley-Terry Model]]
 - 🟠 [[Deep Q-Network]]
