@@ -30,18 +30,18 @@ Three objects do the work, and almost every script starts by making them.
 ## 🟠 3. Technical detail
 - **The three `Auto` classes.** `AutoConfig`, `AutoTokenizer` and `AutoModelForCausalLM` read the config file in a model folder and pick the right Python class. For my Qwen2.5 folder the config says `model_type: qwen2`, and the class that came back was `Qwen2ForCausalLM`. "Causal" means the model only looks at words to the left, which is what a text writer needs.
 - **`from_pretrained(path_or_name)`** loads from a folder on disk, as I did. Given a model name from the Hugging Face website instead, it downloads the files first and keeps a copy (from my memory of the docs; I did not test it, because I had downloaded the files with `huggingface_hub` earlier, see [[Local CPU Chatbot]]).
-- **`torch_dtype`** chooses the number type for the weights. The file stores `bfloat16` (2 bytes per number). I asked for `float32` (4 bytes), which is more exact on a CPU and twice the memory. Equation 1 gives the size.
+- **`torch_dtype`** chooses the number type for the weights. The file stores `bfloat16` (2 bytes per number). I asked for `float32` (4 bytes), which is more exact on a CPU and twice the memory. The rule below gives the size.
 
-$$\text{bytes}=N\times b$$
+Memory for the weights in bytes = number of weights (N) × bytes per weight (b).
 
-**Where:**
-- $N$ is the number of parameters (weights) in the model.
-- $b$ is how many bytes one number takes: 4 for float32, 2 for bfloat16 or float16, 1 for an 8-bit number ([[Quantization]]).
-- $\text{bytes}$ is the memory for the weights alone.
+**Terms:**
+- N is the number of parameters (weights) in the model.
+- b is how many bytes one number takes: 4 for float32, 2 for bfloat16 or float16, 1 for an 8-bit number ([[Quantization]]).
+- bytes is the memory for the weights alone.
 
 **Matters:** if you forget this, the model may not fit in memory and the program crashes while loading. The real need is higher, because the text being processed ([[KV Cache]]) and the code itself also use memory.
 
-**Example (tiny numbers):** a model with $N=1$ billion weights. In float32 ($b=4$) that is 4 GB. In bfloat16 ($b=2$) it is 2 GB. With 8-bit numbers ($b=1$) it is 1 GB. So halving the bytes per number halves the memory, and the same model that needs 4 GB could fit in 1 GB.
+**Example (tiny numbers):** a model with N=1 billion weights. In float32 (b=4) that is 4 GB. In bfloat16 (b=2) it is 2 GB. With 8-bit numbers (b=1) it is 1 GB. So halving the bytes per number halves the memory, and the same model that needs 4 GB could fit in 1 GB.
 
 **`hf_tour.py`** (needs `transformers` and `torch`, and the model folder from the [[Local CPU Chatbot]] project)
 ```python
@@ -49,31 +49,31 @@ $$\text{bytes}=N\times b$$
 import torch
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, pipeline
 
-PATH = "qwen2.5-0.5b-instruct"                       # the folder downloaded in the Local CPU Chatbot project
+PATH = "qwen2.5-0.5b-instruct" # the folder downloaded in the Local CPU Chatbot project
 
-cfg = AutoConfig.from_pretrained(PATH)               # 1. the config: just a small JSON file
+cfg = AutoConfig.from_pretrained(PATH) # 1. the config: just a small JSON file
 print("config:", cfg.model_type, "| layers", cfg.num_hidden_layers, "| width", cfg.hidden_size, "| vocab", cfg.vocab_size)
 
-tok = AutoTokenizer.from_pretrained(PATH)            # 2. the tokenizer: text <-> numbers
+tok = AutoTokenizer.from_pretrained(PATH) # 2. the tokenizer: text <-> numbers
 ids = tok("The cat sat on the", return_tensors="pt")
 print("tokens:", tok.convert_ids_to_tokens(ids["input_ids"][0]), "->", ids["input_ids"][0].tolist())
 
-model = AutoModelForCausalLM.from_pretrained(PATH, torch_dtype=torch.float32).eval()   # 3. the model: the weights
+model = AutoModelForCausalLM.from_pretrained(PATH, torch_dtype=torch.float32).eval() # 3. the model: the weights
 n = sum(p.numel() for p in model.parameters())
 print(f"parameters: {n:,} | float32 weights: {n * 4 / 1e9:.3f} GB | class: {type(model).__name__}")
 
-with torch.no_grad():                                # 4. one forward pass = scores for the next token
-    logits = model(**ids).logits[0, -1]              # shape (vocab,): one score per possible next token
+with torch.no_grad(): # 4. one forward pass = scores for the next token
+    logits = model(**ids).logits[0, -1] # shape (vocab,): one score per possible next token
 probs = torch.softmax(logits, dim=-1)
 top = torch.topk(probs, 3)
 print("logits shape:", tuple(logits.shape), "| top 3 next tokens:",
       [(tok.decode(i), round(p.item(), 3)) for p, i in zip(top.values, top.indices)])
 
-out = model.generate(**ids, max_new_tokens=8, do_sample=False, pad_token_id=tok.eos_token_id)   # 5. generate = repeat step 4
+out = model.generate(**ids, max_new_tokens=8, do_sample=False, pad_token_id=tok.eos_token_id) # 5. generate = repeat step 4
 by_hand = tok.decode(out[0], skip_special_tokens=True)
 print("generate:", repr(by_hand))
 
-pipe = pipeline("text-generation", model=model, tokenizer=tok)   # 6. pipeline = steps 2 to 5 in one call
+pipe = pipeline("text-generation", model=model, tokenizer=tok) # 6. pipeline = steps 2 to 5 in one call
 piped = pipe("The cat sat on the", max_new_tokens=8, do_sample=False)[0]["generated_text"]
 print("pipeline:", repr(piped), "| same as generate:", piped == by_hand)
 ```
@@ -133,12 +133,12 @@ One forward pass gives scores for the next token only. `generate` picks a token,
 
 #flashcards/ml/concept #flashcards/topic/llm-serving What does `pipeline` do?::It runs the tokenizer, the model and the writing loop in one call. In my run it wrote exactly the same text as the longer `generate` code.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving How much memory do a model's weights need, and what does each symbol mean?
+#flashcards/ml/concept #flashcards/topic/llm-serving How much memory do a model's weights need, and what does each symbol mean?
 ?
-$$\text{bytes}=N\times b$$
-- $N$: the number of parameters (weights).
-- $b$: bytes per number: 4 for float32, 2 for bfloat16 or float16, 1 for 8-bit.
-- $\text{bytes}$: memory for the weights alone.
+Memory for the weights in bytes = number of weights (N) × bytes per weight (b).
+- N: the number of parameters (weights).
+- b: bytes per number: 4 for float32, 2 for bfloat16 or float16, 1 for 8-bit.
+- bytes: memory for the weights alone.
 - Forgetting it can make loading crash for lack of memory. The real need is higher, because the text being processed and the code also use memory.
 
 #flashcards/ml/example #flashcards/topic/llm-serving A model has 1 billion weights. How much memory do the weights need in float32, bfloat16 and 8-bit?::1 billion × 4 = 4 GB, × 2 = 2 GB, × 1 = 1 GB (my arithmetic). Halving the bytes per number halves the memory.

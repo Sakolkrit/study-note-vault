@@ -36,7 +36,9 @@ Then `## Related` (links) and `## Sources`.
 
 **History and improvement block (in level 4, before `## Related`).** Every concept note says what came before it and how it improved on that: `**What came before, and how this improved on it:**` with four bullets, *Before*, *Its limit*, *What changed*, *How much better*. Put a number measured in the note's own code in *How much better* whenever the comparison can be run (parameters, steps, accuracy, time-free counts); otherwise give the published figure and its source. Dates, names and published figures are checked against a source (arXiv or the paper's page) or flagged as from memory. Notes written before this rule get the block added as they are revisited.
 
-**Every display equation (`$$...$$`) must be followed by two things:**
+**Write an equation only when the formula is the mechanism** (a loss, an update rule, a score, an objective: the reader could not reproduce the idea without it). Do not force one into a note about a tool, a prompt technique, a file format or a plain concept, and do not promote trivial arithmetic (a size, a ratio, a count) to a display equation. In those notes write the rule in one plain sentence and give a worked example with small numbers and no formula; the example and the explained terms stay. A note with no equation has no formula card. (Notes already trimmed this way: Ollama, vLLM, Safetensors, GGUF, Model Context Protocol, Hugging Face Transformers, System Prompt, Prompt Caching, Prompt Injection, Multi-Agent Systems, LangGraph, and the context-limit rule in Prompt Engineering.)
+
+**Every display equation (`$$...$$`) that is kept must be followed by two things:**
 - a `**Where:**` list: one bullet per symbol saying what it is in plain words, and `**Matters:**` what it does to the result (what breaks or changes without it);
 - an `**Example (tiny numbers):**` block: 2 to 3 easy numbers worked step by step to the final answer, ending with what the answer means.
 

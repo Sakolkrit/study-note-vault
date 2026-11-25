@@ -26,18 +26,18 @@ I found no free picture of this on Wikimedia Commons (the search for "safetensor
 
 ## 🟠 3. Technical detail
 - **The layout** (README, through a page summary, and checked by me on a real file): 8 bytes with an unsigned little-endian 64-bit integer $n$, then $n$ bytes of JSON, then the byte buffer. The JSON maps each tensor name to `dtype`, `shape` and `data_offsets` (start and end, counted from the start of the buffer). A key `__metadata__` can hold a map of text, and my file has `{'format': 'pt'}` there.
-- **Sizes add up exactly.** For one tensor the bytes are the number of entries times the bytes per entry (equation 1).
+- **Sizes add up exactly.** For one tensor the bytes are the number of entries times the bytes per entry (see the rule below).
 
-$$\text{end}-\text{start}=b\times\prod_{j}d_j$$
+A tensor's size in bytes (end offset minus start offset) = bytes per number (b) × the product of its dimension sizes (d_j).
 
-**Where:**
-- $\text{start}$ and $\text{end}$ are the two numbers in `data_offsets`, so $\text{end}-\text{start}$ is the tensor's size in bytes.
-- $b$ is the bytes per number: 4 for `F32`, 2 for `BF16` or `F16`, 1 for an 8-bit type.
-- $d_j$ are the sizes of each dimension in `shape`, and $\prod_j d_j$ is the number of entries in the tensor.
+**Terms:**
+- start and end are the two numbers in `data_offsets`, so end-start is the tensor's size in bytes.
+- b is the bytes per number: 4 for `F32`, 2 for `BF16` or `F16`, 1 for an 8-bit type.
+- d_j are the sizes of each dimension in `shape`, and the product of the d_j is the number of entries in the tensor.
 
 **Matters:** the reader trusts these offsets to jump around the file. If the sizes did not match the shape, a reader would read the wrong bytes, so a good reader checks them (the README says addresses cannot overlap, which I did not test).
 
-**Example (tiny numbers):** a table with shape $2\times3$ in `F32`. It has $2\times3=6$ entries, and each takes 4 bytes, so $\text{end}-\text{start}=6\times4=24$ bytes. The tiny file in the demo below says `data_offsets: [0, 24]`, the same.
+**Example (tiny numbers):** a table with shape 2×3 in `F32`. It has 2×3=6 entries, and each takes 4 bytes, so end-start=6×4=24 bytes. The tiny file in the demo below says `data_offsets: [0, 24]`, the same.
 
 **`safetensors_peek.py`** (needs `torch` and `safetensors`, and the model folder from the [[Local CPU Chatbot]] project)
 ```python
@@ -47,20 +47,20 @@ import json, math, os, pickle, struct, tempfile
 import torch
 from safetensors.torch import save_file, load_file
 
-PATH = "qwen2.5-0.5b-instruct/model.safetensors"       # from the Local CPU Chatbot project
+PATH = "qwen2.5-0.5b-instruct/model.safetensors" # from the Local CPU Chatbot project
 
 
 def header(path):
     with open(path, "rb") as f:
-        n = struct.unpack("<Q", f.read(8))[0]            # first 8 bytes: header length, little-endian unsigned integer
-        return n, json.loads(f.read(n))                  # next n bytes: the JSON header
+        n = struct.unpack("<Q", f.read(8))[0] # first 8 bytes: header length, little-endian unsigned integer
+        return n, json.loads(f.read(n)) # next n bytes: the JSON header
 
 
 # 1. the real model file, read with no library at all
 n, h = header(PATH)
 meta = h.pop("__metadata__")
 size = os.path.getsize(PATH)
-count = sum(math.prod(t["shape"]) for t in h.values())     # numbers in each tensor = product of its shape
+count = sum(math.prod(t["shape"]) for t in h.values()) # numbers in each tensor = product of its shape
 data_end = max(t["data_offsets"][1] for t in h.values())
 name, t = next(iter(h.items()))
 print("file bytes:", size, "| header length:", n, "| data starts at byte", 8 + n, "| data bytes:", data_end, "| 8 + n + data =", 8 + n + data_end)
@@ -77,14 +77,14 @@ print("tiny header:", h2["a"], "| by hand:", struct.unpack("<6f", raw), "| libra
 
 # 3. a pickle file can run code when it is loaded; a safetensors file is only JSON plus numbers
 class Sneaky:
-    def __reduce__(self):                                # pickle calls this on load: "build me by calling print(...)"
-        return (print, ("  -> this line ran while the pickle was loading",))
+    def __reduce__(self): # pickle calls this on load: "build me by calling print(...)"
+        return (print, (" -> this line ran while the pickle was loading",))
 
 
 print("pickle load:")
 pickle.loads(pickle.dumps(Sneaky()))
 try:
-    json.loads(open(tmp, "rb").read()[8:8 + n2])         # the only 'code-like' part of the file is JSON, which is just data
+    json.loads(open(tmp, "rb").read()[8:8 + n2]) # the only 'code-like' part of the file is JSON, which is just data
     print("safetensors header parsed as plain JSON: ok")
 except Exception as e:
     print("unexpected:", e)
@@ -138,12 +138,12 @@ What to look for: the 32,288 bytes that I could not explain in [[Hugging Face Tr
 
 #flashcards/ml/concept #flashcards/topic/llm-serving Why is a safetensors file safer than a pickle file?::A pickle can store instructions that run when it is loaded. A safetensors file is only a JSON list plus numbers, so there is nothing to run. In my demo a pickle ran a hidden `print` on load.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving How many bytes does one tensor take in a safetensors file, and what does each symbol mean?
+#flashcards/ml/concept #flashcards/topic/llm-serving How many bytes does one tensor take in a safetensors file, and what does each symbol mean?
 ?
-$$\text{end}-\text{start}=b\times\prod_{j}d_j$$
-- $\text{start}$ and $\text{end}$: the two numbers in `data_offsets`.
-- $b$: bytes per number (4 for `F32`, 2 for `BF16` or `F16`, 1 for an 8-bit type).
-- $d_j$: the sizes in `shape`, so $\prod_j d_j$ is the number of entries.
+A tensor's size in bytes (end offset minus start offset) = bytes per number (b) × the product of its dimension sizes (d_j).
+- start and end: the two numbers in `data_offsets`.
+- b: bytes per number (4 for `F32`, 2 for `BF16` or `F16`, 1 for an 8-bit type).
+- d_j: the sizes in `shape`, so the product of the d_j is the number of entries.
 - A reader trusts these offsets to jump around the file, so mismatched sizes would mean reading the wrong bytes.
 
 #flashcards/ml/example #flashcards/topic/llm-serving A tensor has shape 2 by 3 and type `F32`. What are its `data_offsets`, if it is the first tensor?::2 × 3 = 6 entries × 4 bytes = 24, so `[0, 24]` (my arithmetic, matching the tiny file in the demo).

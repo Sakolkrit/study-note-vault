@@ -30,32 +30,32 @@ No picture: I searched Wikimedia Commons for GGUF and found no free, on-topic im
 - **Metadata value types** have ids 0 to 12: unsigned and signed integers of 8, 16, 32 and 64 bits, 32- and 64-bit floats, bool, string and array.
 - **Tensor names follow a pattern:** `token_embd.weight`, then per layer `blk.N.attn_q.weight`, `blk.N.ffn_up.weight` and so on, then `output_norm.weight`.
 - **Each tensor has its own type.** The spec says the type ids mirror a list in the ggml source and "gain new values over time". In the file I read, five types appear, which I listed below.
-- **Size rule.** Quantized types work in blocks: every block of `B` weights is stored in a fixed number of bytes. So a tensor's size is easy to compute from its shape and type (equation 1).
+- **Size rule.** Quantized types work in blocks: every block of `B` weights is stored in a fixed number of bytes. So a tensor's size is easy to compute from its shape and type (the size rule below).
 
-$$\text{bytes}=\frac{n}{B}\times s$$
+Bytes of a block-quantized tensor = (number of weights n ÷ weights per block B) × bytes per block (s).
 
-**Where:**
-- $n$: the number of weights in the tensor (the product of its shape).
-- $B$: how many weights share one block (32 for Q5_0 and Q8_0, 256 for Q4_K and Q6_K; 1 for plain float32).
-- $s$: how many bytes one block takes in the file.
-- $\text{bytes}$: the size of the tensor's data in the file.
+**Terms:**
+- n: the number of weights in the tensor (the product of its shape).
+- B: how many weights share one block (32 for Q5_0 and Q8_0, 256 for Q4_K and Q6_K; 1 for plain float32).
+- s: how many bytes one block takes in the file.
+- bytes: the size of the tensor's data in the file.
 
-**Matters:** it is why a program can find every tensor without reading them all, and why a model's file size is just a sum. If $n$ is not a whole number of blocks the format cannot store the tensor in that type.
+**Matters:** it is why a program can find every tensor without reading them all, and why a model's file size is just a sum. If n is not a whole number of blocks the format cannot store the tensor in that type.
 
-**Example (tiny numbers):** 64 weights stored as Q5_0 ($B=32$, $s=22$ bytes). Blocks: $64/32=2$. Bytes: $2\times22=44$. The same 64 weights as float16 take $64\times2=128$ bytes, so Q5_0 is about 2.9 times smaller. On the real file, `token_embd.weight` has $896\times151{,}936=136{,}134{,}656$ weights in Q8_0 ($B=32$, $s=34$), so $4{,}254{,}208$ blocks and $144{,}643{,}072$ bytes.
+**Example (tiny numbers):** 64 weights stored as Q5_0 (B=32, s=22 bytes). Blocks: 64/32=2. Bytes: 2×22=44. The same 64 weights as float16 take 64×2=128 bytes, so Q5_0 is about 2.9 times smaller. On the real file, `token_embd.weight` has 896×151,936=136,134,656 weights in Q8_0 (B=32, s=34), so 4,254,208 blocks and 144,643,072 bytes.
 
-- **Bits per weight** is the fairest way to compare formats (equation 2).
+- **Bits per weight** is the fairest way to compare formats (the bits-per-weight rule below).
 
-$$b=\frac{8\,s}{B}\qquad\text{and for a whole file}\qquad b=\frac{8\,S}{N}$$
+Bits per weight b = 8 × bytes per block (s) ÷ weights per block (B); for a whole file, b = 8 × file bytes (S) ÷ number of weights (N).
 
-**Where:**
-- $b$: bits used per weight, on average.
-- $s$ and $B$: bytes per block and weights per block, as above. The 8 turns bytes into bits.
-- $S$: all the bytes of tensor data in the file. $N$: the number of weights in the whole model.
+**Terms:**
+- b: bits used per weight, on average.
+- s and B: bytes per block and weights per block, as above. The 8 turns bytes into bits.
+- S: all the bytes of tensor data in the file. N: the number of weights in the whole model.
 
-**Matters:** it says how much a format shrinks the model, whatever the model's size. The header and metadata are not counted in $S$.
+**Matters:** it says how much a format shrinks the model, whatever the model's size. The header and metadata are not counted in S.
 
-**Example (tiny numbers):** Q5_0: $8\times22/32=5.5$ bits per weight. Q8_0: $8\times34/32=8.5$. Whole file: $S=391{,}859{,}712$ bytes and $N=494{,}032{,}768$ weights, so $b=8\times391{,}859{,}712/494{,}032{,}768=6.345$ bits per weight. Float16 uses 16, so this file is 2.52 times smaller than float16 and 5.04 times smaller than float32.
+**Example (tiny numbers):** Q5_0: 8×22/32=5.5 bits per weight. Q8_0: 8×34/32=8.5. Whole file: S=391,859,712 bytes and N=494,032,768 weights, so b=8×391,859,712/494,032,768=6.345 bits per weight. Float16 uses 16, so this file is 2.52 times smaller than float16 and 5.04 times smaller than float32.
 
 **`gguf_peek.py`** (my own reader, standard library only)
 ```python
@@ -88,7 +88,7 @@ def peek(path):
         tensors = []
         for _ in range(n_tensors):
             name = r.string(); dims = [r.get("<Q") for _ in range(r.get("<I"))]
-            tensors.append((name, dims, r.get("<I"), r.get("<Q")))   # name, shape, ggml type id, offset
+            tensors.append((name, dims, r.get("<I"), r.get("<Q"))) # name, shape, ggml type id, offset
     return version, meta, tensors
 
 
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     version, meta, tensors = peek(sys.argv[1])
     print("version", version, "| metadata keys", len(meta), "| tensors", len(tensors))
     for k, v in meta.items():
-        print(f"  {k} = {str(v)[:60]!r}" if not isinstance(v, list) else f"  {k} = list of {len(v)}")
+        print(f" {k} = {str(v)[:60]!r}" if not isinstance(v, list) else f" {k} = list of {len(v)}")
     by_type = collections.Counter(t[2] for t in tensors)
     print("tensor types (ggml type id: count):", dict(by_type))
 ```
@@ -117,13 +117,13 @@ version 3 | metadata keys 34 | tensors 290
   tokenizer.ggml.tokens = list of 151936
   tokenizer.ggml.merges = list of 151387
   tokenizer.ggml.eos_token_id = '151645'
-  tokenizer.chat_template = "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if"
+  tokenizer.chat_template = "{%- if tools %}\n {{- '<|im_start|>system\\n' }}\n {%- if"
   general.quantization_version = '2'
 tensor types (ggml type id: count): {8: 13, 0: 121, 14: 12, 6: 132, 12: 12}
 ```
 (I removed some lines here; the full run printed all 34 keys.) What to look for: the word list and the merge rules of the tokenizer are inside the file, and so is the chat template.
 
-**`gguf_sizes.py`** (checks equation 1 and 2 against the official `gguf` package, which I installed with `pip install gguf`, version 0.18.0)
+**`gguf_sizes.py`** (checks the two rules against the official `gguf` package, which I installed with `pip install gguf`, version 0.18.0)
 ```python
 """Check the GGUF size rules on a real file, with my own header reader and the official `gguf` package."""
 import sys, collections
@@ -132,7 +132,7 @@ from gguf import GGML_QUANT_SIZES, GGMLQuantizationType as T
 from gguf_peek import peek
 
 path = sys.argv[1]
-version, meta, tensors = peek(path)                      # my reader: (name, shape, type id, offset)
+version, meta, tensors = peek(path) # my reader: (name, shape, type id, offset)
 official = gguf.GGUFReader(path)
 print("tensors: mine", len(tensors), "| official", len(official.tensors))
 
@@ -142,7 +142,7 @@ for (name, dims, tid, off), o in zip(tensors, official.tensors):
     n = 1
     for d in dims: n *= d
     block, size = GGML_QUANT_SIZES[T(tid)]
-    mine = n // block * size                             # bytes = elements / block size * bytes per block
+    mine = n // block * size # bytes = elements / block size * bytes per block
     assert mine == int(o.n_bytes) and n == int(o.n_elements), name
     tot_bytes += mine; tot_elems += n
     e = per_type.setdefault(T(tid).name, [0, 0, 0, block, size]); e[0] += 1; e[1] += n; e[2] += mine
@@ -156,27 +156,27 @@ print(f"file size {os.path.getsize(path):,} bytes; everything that is not tensor
 print("ratio to float32:", round(4 * tot_elems / tot_bytes, 2), "| to float16:", round(2 * tot_elems / tot_bytes, 2))
 for name, dims, tid, off in tensors:
     if name in ("token_embd.weight", "blk.0.attn_q.weight", "blk.0.ffn_up.weight", "blk.0.ffn_down.weight", "blk.0.attn_v.weight", "output_norm.weight"):
-        print(f"  {name:22s} shape {dims} type {T(tid).name}")
+        print(f" {name:22s} shape {dims} type {T(tid).name}")
 ```
 Output:
 ```
 tensors: mine 290 | official 290
 my size rule matches the official reader for all tensors
-type   tensors      weights        bytes block bytes/block bits/weight
-Q8_0        13  137,510,912  146,105,344    32          34       8.500
-F32        121       71,552      286,208     1           4      32.000
-Q6_K        12   52,297,728   42,900,480   256         210       6.562
-Q5_0       132  251,854,848  173,150,208    32          22       5.500
-Q4_K        12   52,297,728   29,417,472   256         144       4.500
+type tensors weights bytes block bytes/block bits/weight
+Q8_0 13 137,510,912 146,105,344 32 34 8.500
+F32 121 71,552 286,208 1 4 32.000
+Q6_K 12 52,297,728 42,900,480 256 210 6.562
+Q5_0 132 251,854,848 173,150,208 32 22 5.500
+Q4_K 12 52,297,728 29,417,472 256 144 4.500
 total: 494,032,768 weights, 391,859,712 bytes in tensors -> 6.345 bits per weight
 file size 397,807,936 bytes; everything that is not tensor data (header, metadata, tokenizer, padding): 5,948,224
 ratio to float32: 5.04 | to float16: 2.52
-  token_embd.weight      shape [896, 151936] type Q8_0
-  blk.0.ffn_down.weight  shape [4864, 896] type Q6_K
-  blk.0.ffn_up.weight    shape [896, 4864] type Q5_0
-  blk.0.attn_q.weight    shape [896, 896] type Q5_0
-  blk.0.attn_v.weight    shape [896, 128] type Q8_0
-  output_norm.weight     shape [896] type F32
+  token_embd.weight shape [896, 151936] type Q8_0
+  blk.0.ffn_down.weight shape [4864, 896] type Q6_K
+  blk.0.ffn_up.weight shape [896, 4864] type Q5_0
+  blk.0.attn_q.weight shape [896, 896] type Q5_0
+  blk.0.attn_v.weight shape [896, 128] type Q8_0
+  output_norm.weight shape [896] type F32
 ```
 What to look for: my size rule gives exactly the official byte count for all 290 tensors, and the file mixes five types.
 
@@ -212,22 +212,22 @@ What to look for: my size rule gives exactly the official byte count for all 290
 
 #flashcards/ml/concept #flashcards/topic/llm-serving Which older formats did GGUF replace, and what was wrong with them?::GGML, GGMF and GGJT (per the spec). They did not name the model architecture, adding a setting was a breaking change, and every architecture needed its own conversion script.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving Write how many bytes a quantized GGUF tensor takes, and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm-serving Write how many bytes a quantized GGUF tensor takes, and explain each symbol.
 ?
-$$\text{bytes}=\frac{n}{B}\times s$$
-- $n$: the number of weights in the tensor (the product of its shape).
-- $B$: how many weights share one block (32 for Q5_0 and Q8_0, 256 for Q4_K and Q6_K, 1 for float32).
-- $s$: how many bytes one block takes in the file.
-- $\text{bytes}$: the size of the tensor's data. Because it is a simple sum, a program can find every tensor without reading them all. $n$ must be a whole number of blocks.
+Bytes of a block-quantized tensor = (number of weights n ÷ weights per block B) × bytes per block (s).
+- n: the number of weights in the tensor (the product of its shape).
+- B: how many weights share one block (32 for Q5_0 and Q8_0, 256 for Q4_K and Q6_K, 1 for float32).
+- s: how many bytes one block takes in the file.
+- bytes: the size of the tensor's data. Because it is a simple sum, a program can find every tensor without reading them all. n must be a whole number of blocks.
 
 #flashcards/ml/example #flashcards/topic/llm-serving 64 weights are stored as Q5_0 (32 weights and 22 bytes per block). How many bytes, and how does it compare with float16?::64/32 = 2 blocks, 2 × 22 = 44 bytes. Float16 would be 64 × 2 = 128 bytes, so Q5_0 is about 2.9 times smaller.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving Write bits per weight for a block format and for a whole file, and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm-serving Write bits per weight for a block format and for a whole file, and explain each symbol.
 ?
-$$b=\frac{8\,s}{B}\qquad\text{and for a whole file}\qquad b=\frac{8\,S}{N}$$
-- $b$: the average bits used per weight.
-- $s$ and $B$: bytes per block and weights per block. The 8 turns bytes into bits.
-- $S$: all the bytes of tensor data in the file (not the header or metadata). $N$: the number of weights in the model.
+Bits per weight b = 8 × bytes per block (s) ÷ weights per block (B); for a whole file, b = 8 × file bytes (S) ÷ number of weights (N).
+- b: the average bits used per weight.
+- s and B: bytes per block and weights per block. The 8 turns bytes into bits.
+- S: all the bytes of tensor data in the file (not the header or metadata). N: the number of weights in the model.
 - It lets you compare formats whatever the size of the model.
 
 #flashcards/ml/example #flashcards/topic/llm-serving The Qwen2.5-0.5B file has 391,859,712 bytes of tensor data for 494,032,768 weights. What is the bits per weight?::8 × 391,859,712 / 494,032,768 = 6.345 bits per weight (my arithmetic, checked against the official gguf package). It is 2.52 times smaller than float16.

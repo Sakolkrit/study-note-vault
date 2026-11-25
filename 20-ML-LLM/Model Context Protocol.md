@@ -62,20 +62,18 @@ for m, n in ((3, 3), (10, 20), (100, 1000)): print('apps', m, 'tools', n, '| cus
 ## 🔴 4. Deep / formal
 **Why a standard saves work.** If $M$ AI applications each need to use $N$ tools:
 
-$$
-\underbrace{M\times N}_{\text{custom connection per pair}}\quad\text{against}\quad\underbrace{M+N}_{\text{one standard on each side}}
-$$
+Without a standard, every model–tool pair needs its own connection (M × N of them); with one standard, each model and each tool needs just one (M + N).
 
-**Where:**
-- $M$ is the number of AI applications (hosts) and $N$ is the number of tools or data sources.
-- $M\times N$ counts every pairing: each app builds its own connector to each tool.
-- $M+N$ counts one standard connector per app and one standard server per tool.
+**Terms:**
+- M is the number of AI applications (hosts) and N is the number of tools or data sources.
+- M × N counts every pairing: each app builds its own connector to each tool.
+- M+N counts one standard connector per app and one standard server per tool.
 - **Matters:** the first grows like a product, the second like a sum. The gap widens quickly as the ecosystem grows. The simple count ignores that each tool still has to be written well, and that the standard itself must be learned and implemented.
 
 **Example (tiny numbers):** the lecture's picture has 3 models and 3 tools.
-- Custom: $3\times3=\mathbf{9}$ connections.
-- Standard: $3+3=\mathbf{6}$.
-- Bigger: $M=10$, $N=20$ gives $\mathbf{200}$ against $\mathbf{30}$; $M=100$, $N=1000$ gives $\mathbf{100{,}000}$ against $\mathbf{1{,}100}$.
+- Custom: 3×3=9 connections.
+- Standard: 3+3=6.
+- Bigger: M=10, N=20 gives 200 against 30; M=100, N=1000 gives 100,000 against 1,100.
 - Meaning: the saving is small at 3 and 3 but enormous in a large ecosystem.
 
 **Further notes:**
@@ -101,12 +99,12 @@ $$
 
 #flashcards/ml/reverse #flashcards/topic/agents-rag Model Context Protocol (MCP):::A standard plug for AI, like USB. A tool that speaks MCP can be used by any AI app that speaks MCP, with no custom wiring for each pair.
 
-#flashcards/ml/formula #flashcards/topic/agents-rag Write the number of connections with and without a standard and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/agents-rag Write the number of connections with and without a standard and explain each symbol.
 ?
-$$\underbrace{M\times N}_{\text{custom connection per pair}}\quad\text{against}\quad\underbrace{M+N}_{\text{one standard on each side}}$$
-- $M$: the number of AI applications (hosts). $N$: the number of tools or data sources.
-- $M\times N$: every pairing, where each app builds its own connector to each tool.
-- $M+N$: one standard connector per app and one standard server per tool.
+Without a standard, every model–tool pair needs its own connection (M × N of them); with one standard, each model and each tool needs just one (M + N).
+- M: the number of AI applications (hosts). N: the number of tools or data sources.
+- M × N: every pairing, where each app builds its own connector to each tool.
+- M+N: one standard connector per app and one standard server per tool.
 - The first grows like a product and the second like a sum, so the saving gets huge as the numbers grow.
 
 #flashcards/ml/cloze #flashcards/topic/agents-rag MCP connects a model to ==tools and data==, while Agent2Agent connects ==agents to agents==.

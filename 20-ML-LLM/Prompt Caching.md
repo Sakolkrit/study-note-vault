@@ -36,15 +36,15 @@ import numpy as np
 rng = np.random.default_rng(0); d = 16
 P, U, calls = 10000, 200, 50
 print(f"{calls} calls, each = the same {P:,}-token prefix + {U} new tokens")
-print(f"  without a cache: {calls * (P + U):,} tokens processed; with the prefix cached once: {P + calls * U:,} ({calls * (P + U) / (P + calls * U):.1f}x fewer)")
+print(f" without a cache: {calls * (P + U):,} tokens processed; with the prefix cached once: {P + calls * U:,} ({calls * (P + U) / (P + calls * U):.1f}x fewer)")
 Wq, Wk, Wv = (rng.standard_normal((d, d)) for _ in range(3))
-pre, new = rng.standard_normal((40, d)), rng.standard_normal((6, d))     # tiny stand-ins: 40 prefix tokens, 6 new ones
-def attend(x, K, V, start):                                            # causal attention for the rows x placed at positions start...
+pre, new = rng.standard_normal((40, d)), rng.standard_normal((6, d)) # tiny stand-ins: 40 prefix tokens, 6 new ones
+def attend(x, K, V, start): # causal attention for the rows x placed at positions start...
     q = x @ Wq; s = q @ K.T / np.sqrt(d)
     for i in range(len(x)): s[i, start + i + 1:] = -np.inf
     e = np.exp(s - s.max(1, keepdims=True)); return (e / e.sum(1, keepdims=True)) @ V
 full_x = np.vstack([pre, new]); out_full = attend(full_x, full_x @ Wk, full_x @ Wv, 0)[-6:]
-Kc, Vc = pre @ Wk, pre @ Wv                                            # the cache: keys and values of the prefix, computed once
+Kc, Vc = pre @ Wk, pre @ Wv # the cache: keys and values of the prefix, computed once
 out_cached = attend(new, np.vstack([Kc, new @ Wk]), np.vstack([Vc, new @ Wv]), 40)
 print("outputs for the new tokens, full recompute vs cached prefix, largest difference:", f"{np.abs(out_full - out_cached).max():.1e}")
 ```
@@ -52,20 +52,18 @@ print("outputs for the new tokens, full recompute vs cached prefix, largest diff
 ## 🔴 4. Deep / formal
 **What caching saves.** Suppose a prompt is a shared prefix of $P$ tokens plus $u$ new tokens, and you make $m$ calls. The number of tokens the model has to process is
 
-$$
-\text{without caching: } m\,(P+u)\qquad\text{with caching: } P+m\,u
-$$
+Without caching, each of m requests pays for the long shared prompt (P) plus its own new tokens (u): m × (P + u). With caching, the shared part is paid once: P + m × u.
 
-**Where:**
-- $P$ is the length of the shared prefix, in tokens. $u$ is the length of the part that changes in each call. $m$ is the number of calls.
-- Without caching, every call processes the prefix again: $m$ copies of $P$.
-- With caching, the prefix is processed once ($P$) and only the new part is processed in each call ($mu$).
-- **Matters:** the saving grows with $P$ and with $m$. If the prefix is short, or you make only one call, there is almost nothing to save. This counts tokens processed; prices per cached token are lower still but are the provider's choice.
+**Terms:**
+- P is the length of the shared prefix, in tokens. u is the length of the part that changes in each call. m is the number of calls.
+- Without caching, every call processes the prefix again: m copies of P.
+- With caching, the prefix is processed once (P) and only the new part is processed in each call (m × u).
+- **Matters:** the saving grows with P and with m. If the prefix is short, or you make only one call, there is almost nothing to save. This counts tokens processed; prices per cached token are lower still but are the provider's choice.
 
-**Example (tiny numbers):** $P=10{,}000$, $u=200$, $m=50$.
-- Without caching: $50\cdot(10{,}000+200)=\mathbf{510{,}000}$ tokens.
-- With caching: $10{,}000+50\cdot200=\mathbf{20{,}000}$ tokens.
-- Ratio: $510{,}000/20{,}000=\mathbf{25.5}$ times fewer.
+**Example (tiny numbers):** P=10,000, u=200, m=50.
+- Without caching: 50 × (10,000+200)=510,000 tokens.
+- With caching: 10,000+50 × 200=20,000 tokens.
+- Ratio: 510,000/20,000=25.5 times fewer.
 - Meaning: for a long repeated prefix and many calls, nearly all of the work disappears.
 
 **Why the answer does not change.** The keys and values of the prefix tokens do not depend on what comes after them (attention is causal; see [[Self-Attention]]). So reading the prefix again would produce exactly the numbers that were stored. The code below checks this on a tiny attention layer: the output for the new tokens with the cached prefix matches a full recompute to 0.0e+00.
@@ -96,15 +94,15 @@ $$
 
 #flashcards/ml/reverse #flashcards/topic/llm-serving Prompt caching:::Keep the keys and values (KV cache) of a repeated prompt start (the prefix) and reuse them, so only the new part at the end has to be read fresh.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving Write the tokens processed with and without caching and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm-serving Write the tokens processed with and without caching and explain each symbol.
 ?
-$$\text{without caching: } m\,(P+u)\qquad\text{with caching: } P+m\,u$$
-- $P$: length of the shared prefix in tokens. $u$: length of the part that changes in each call. $m$: number of calls.
-- Without caching every call processes the prefix again: $m$ copies of $P$.
-- With caching the prefix is processed once ($P$) and only the new part each call ($mu$).
-- The saving grows with $P$ and $m$. A short prefix or a single call saves almost nothing. This counts tokens processed. Prices per cached token are the provider's choice.
+Without caching, each of m requests pays for the long shared prompt (P) plus its own new tokens (u): m × (P + u). With caching, the shared part is paid once: P + m × u.
+- P: length of the shared prefix in tokens. u: length of the part that changes in each call. m: number of calls.
+- Without caching every call processes the prefix again: m copies of P.
+- With caching the prefix is processed once (P) and only the new part each call (m × u).
+- The saving grows with P and m. A short prefix or a single call saves almost nothing. This counts tokens processed. Prices per cached token are the provider's choice.
 
-#flashcards/ml/example #flashcards/topic/llm-serving $P=10{,}000$, $u=200$, $m=50$. How many tokens are processed with and without caching?::Without: $50\cdot10{,}200=510{,}000$. With: $10{,}000+50\cdot200=20{,}000$. That is 25.5 times fewer.
+#flashcards/ml/example #flashcards/topic/llm-serving $P=10{,}000$, $u=200$, $m=50$. How many tokens are processed with and without caching?::Without: $50 × 10{,}200=510{,}000$. With: $10{,}000+50 × 200=20{,}000$. That is 25.5 times fewer.
 
 #flashcards/ml/cloze #flashcards/topic/llm-serving Prompt caching only helps if the repeated text is at the ==start== of the prompt and ==exactly the same==.
 

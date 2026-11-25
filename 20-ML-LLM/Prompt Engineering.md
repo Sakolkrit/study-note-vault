@@ -58,7 +58,7 @@ print(build("Loved every minute"))
 # Label:
 
 from math import comb
-def majority(n, p):                           # chance a majority of n votes is right
+def majority(n, p): # chance a majority of n votes is right
     return sum(comb(n, k) * p**k * (1 - p)**(n - k) for k in range(n // 2 + 1, n + 1))
 print(round(majority(3, 0.7), 3), round(majority(5, 0.7), 3), round(majority(3, 0.4), 3))
 # 0.784 0.837 0.352
@@ -80,27 +80,25 @@ $$
 - **Caveat:** repeated answers from the same model are not truly independent (the same blind spots repeat), so real gains are smaller than the formula suggests.
 
 **Example (tiny numbers):** $p=0.7$.
-- $n=3$: right if 2 or 3 of the 3 are right. $\binom32\cdot0.7^2\cdot0.3+\binom33\cdot0.7^3=3\cdot0.49\cdot0.3+0.343=0.441+0.343=\mathbf{0.784}$.
+- $n=3$: right if 2 or 3 of the 3 are right. $\binom32 × 0.7^2 × 0.3+\binom33 × 0.7^3=3 × 0.49 × 0.3+0.343=0.441+0.343=\mathbf{0.784}$.
 - $n=5$: $\mathbf{0.837}$. So five votes beat three, which beat one answer ($0.70$).
 - If instead $p=0.4$: $n=3$ gives $\mathbf{0.352}$, **lower** than $0.4$. Voting amplifies whichever side is more likely.
 - Meaning: voting is a good trick when the model is usually right and a bad one when it is usually wrong, and it costs $n$ times as much.
 
 **The token budget.** The prompt and the reply share the same limited space, the context window:
 
-$$
-n_{\text{prompt}}+n_{\text{reply}}\le n_{\text{context}}
-$$
+The prompt tokens plus the reply tokens must fit inside the context window.
 
-**Where:**
-- $n_{\text{prompt}}$ is the number of tokens in everything you send: instructions, examples, pasted documents and the earlier conversation.
-- $n_{\text{reply}}$ is the number of tokens the model writes back.
-- $n_{\text{context}}$ is the model's context window, a fixed limit (see [[Tokenization]]).
+**Terms:**
+- n_prompt is the number of tokens in everything you send: instructions, examples, pasted documents and the earlier conversation.
+- n_reply is the number of tokens the model writes back.
+- n_context is the model's context window, a fixed limit (see [[Tokenization]]).
 - **Matters:** every example or document you add leaves less room for the answer, and a prompt that is too long gets cut or rejected. Long prompts also cost more and can dilute the important instructions.
 
-**Example (tiny numbers):** a window of $8000$ tokens (an illustrative number; real models differ).
-- Your prompt, with instructions, three examples and a pasted article, is $6500$ tokens.
-- The most the reply can be: $8000-6500=\mathbf{1500}$ tokens.
-- Using the common rule of thumb that a token is about $0.75$ of an English word (from memory, and it varies by language), that is about $1125$ words.
+**Example (tiny numbers):** a window of 8000 tokens (an illustrative number; real models differ).
+- Your prompt, with instructions, three examples and a pasted article, is 6500 tokens.
+- The most the reply can be: 8000-6500=1500 tokens.
+- Using the common rule of thumb that a token is about 0.75 of an English word (from memory, and it varies by language), that is about 1125 words.
 - Meaning: if you need a longer answer, trim the prompt (shorter examples, only the relevant part of the article).
 
 **Further notes:**
@@ -120,7 +118,7 @@ $$
 
 ```python
 # Cost of a few-shot prompt, with assumed sizes (the real sizes depend on the task).
-question, exemplar = 40, 120                 # tokens: the question, and one worked example with its reasoning
+question, exemplar = 40, 120 # tokens: the question, and one worked example with its reasoning
 for k in (0, 1, 8):
     print(f"{k} worked examples in the prompt: about {question + k * exemplar} tokens read on every call")
 print("8 examples vs none:", round((question + 8 * exemplar) / question, 1), "x the input tokens per call")
@@ -150,12 +148,12 @@ $$P(\text{majority right})=\sum_{k=\lfloor n/2\rfloor+1}^{n}\binom{n}{k}\,p^{k}(
 - $\binom{n}{k}$: "$n$ choose $k$", the number of ways to pick which answers are right.
 - Voting amplifies: it helps when $p>0.5$ and hurts when $p<0.5$.
 
-#flashcards/ml/formula #flashcards/topic/llm Write the context window limit and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm Write the context window limit and explain each symbol.
 ?
-$$n_{\text{prompt}}+n_{\text{reply}}\le n_{\text{context}}$$
-- $n_{\text{prompt}}$: the tokens in everything you send (instructions, examples, pasted documents, earlier conversation).
-- $n_{\text{reply}}$: the tokens the model writes back.
-- $n_{\text{context}}$: the model's context window, a fixed limit.
+The prompt tokens plus the reply tokens must fit inside the context window.
+- n_prompt: the tokens in everything you send (instructions, examples, pasted documents, earlier conversation).
+- n_reply: the tokens the model writes back.
+- n_context: the model's context window, a fixed limit.
 - Every example or document you add leaves less room for the reply.
 
 #flashcards/ml/cloze #flashcards/topic/llm Majority voting helps only if a single answer is right more than ==50%== of the time.

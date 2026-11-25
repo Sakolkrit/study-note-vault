@@ -30,19 +30,19 @@ Think of a board game where you move a token from square to square. Each square 
 ## 🟠 3. Technical detail
 - **Install.** `pip install langgraph`. On Python 3.9 pip chose version 0.6.11 here (the docs I read describe the 1.x series, so some options may differ). Importing the checkpoint module printed a `LangChainPendingDeprecationWarning` about a future default, which I left alone.
 - **The pieces, with the names used in code.** `StateGraph(State)` makes the builder, where `State` is a `TypedDict`. `add_node(name, function)`, `add_edge(a, b)` and `add_conditional_edges(a, picker, mapping)` draw the map. `START` and `END` are the two special ends. `Annotated[list, operator.add]` marks a field with a reducer.
-- **What a node returns.** A dict with only the fields to change. Other fields stay as they were. Equation 1 says how each field is updated.
+- **What a node returns.** A dict with only the fields to change. Other fields stay as they were. The rule below says how each field is updated.
 
-$$s_{t+1}[k]=f_k\big(s_t[k],\,u_t[k]\big)$$
+After each step, every field k of the state gets a new value from its own rule f_k, applied to the field's old value and the node's update.
 
-**Where:**
-- $s_t[k]$ is the value of field $k$ before step $t$ runs.
-- $u_t[k]$ is the value a node returned for field $k$ in that step (a field the node does not return stays unchanged).
-- $f_k$ is the merge rule (reducer) chosen for field $k$: the default keeps the new value, and `operator.add` joins two lists.
-- $s_{t+1}[k]$ is the value of the field after the step.
+**Terms:**
+- s_t[k] is the value of field k before step t runs.
+- u_t[k] is the value a node returned for field k in that step (a field the node does not return stays unchanged).
+- f_k is the merge rule (reducer) chosen for field k: the default keeps the new value, and `operator.add` joins two lists.
+- s_(t+1)[k] is the value of the field after the step.
 
 **Matters:** if a list field has no adding rule, each write replaces the whole list, and the notes from an earlier node are lost.
 
-**Example (tiny numbers):** field `n` has the default rule. Before the step $n=1$, and the node returns $n=2$, so the new value is 2. Field `log` uses `operator.add`. Before the step it is `['step 1']` and the node returns `['step 2']`, so the new value is `['step 1', 'step 2']`. The demo below ends with $n=3$ and a log of four entries, one per node run.
+**Example (tiny numbers):** field `n` has the default rule. Before the step n=1, and the node returns n=2, so the new value is 2. Field `log` uses `operator.add`. Before the step it is `['step 1']` and the node returns `['step 2']`, so the new value is `['step 1', 'step 2']`. The demo below ends with n=3 and a log of four entries, one per node run.
 
 **`lg_demo.py`** (needs only `langgraph`, no model)
 ```python
@@ -56,12 +56,12 @@ from langgraph.graph import END, START, StateGraph
 
 
 class S(TypedDict):
-    n: int                                # no reducer: a new value overwrites the old one
-    log: Annotated[list, operator.add]    # reducer: a new list is added to the old one
+    n: int # no reducer: a new value overwrites the old one
+    log: Annotated[list, operator.add] # reducer: a new list is added to the old one
 
 
-def step(s):    return {"n": s["n"] + 1, "log": [f"step {s['n'] + 1}"]}    # a node returns a partial update
-def done(s):    return {"log": ["done"]}
+def step(s): return {"n": s["n"] + 1, "log": [f"step {s['n'] + 1}"]} # a node returns a partial update
+def done(s): return {"log": ["done"]}
 
 
 def make(checkpointer=None, stop=3, **compile_kw):
@@ -69,7 +69,7 @@ def make(checkpointer=None, stop=3, **compile_kw):
     g.add_node("step", step)
     g.add_node("done", done)
     g.add_edge(START, "step")
-    g.add_conditional_edges("step", lambda s: "step" if s["n"] < stop else "done", {"step": "step", "done": "done"})   # the edge function picks the next node
+    g.add_conditional_edges("step", lambda s: "step" if s["n"] < stop else "done", {"step": "step", "done": "done"}) # the edge function picks the next node
     g.add_edge("done", END)
     return g.compile(checkpointer=checkpointer, **compile_kw)
 
@@ -85,13 +85,13 @@ print("2 stream :", [(k, v) for u in app.stream({"n": 0, "log": []}, stream_mode
 try:
     make(stop=10 ** 9).invoke({"n": 0, "log": []}, {"recursion_limit": 5})
 except GraphRecursionError as e:
-    print("3 limit  :", type(e).__name__)
+    print("3 limit :", type(e).__name__)
 
 # 4. memory: the same thread_id keeps the saved state, another id starts fresh
 mem = make(MemorySaver())
 a, b = {"configurable": {"thread_id": "a"}}, {"configurable": {"thread_id": "b"}}
 mem.invoke({"n": 0, "log": []}, a)
-r = mem.invoke({"n": 3, "log": ["second question"]}, a)       # same thread: n restarts at 3 (we passed it), log keeps growing
+r = mem.invoke({"n": 3, "log": ["second question"]}, a) # same thread: n restarts at 3 (we passed it), log keeps growing
 print("4 thread a:", r["log"])
 print("4 thread b:", mem.invoke({"n": 0, "log": []}, b)["log"])
 print("4 saved a :", len(list(mem.get_state_history(a))), "checkpoints")
@@ -106,7 +106,7 @@ What it printed (langgraph 0.6.11, Python 3.9.6, in a fresh virtual environment)
 ```
 1 invoke : {'n': 3, 'log': ['step 1', 'step 2', 'step 3', 'done']}
 2 stream : [('step', {'n': 1, 'log': ['step 1']}), ('step', {'n': 2, 'log': ['step 2']}), ('step', {'n': 3, 'log': ['step 3']}), ('done', {'log': ['done']})]
-3 limit  : GraphRecursionError
+3 limit : GraphRecursionError
 4 thread a: ['step 1', 'step 2', 'step 3', 'done', 'second question', 'step 4', 'done']
 4 thread b: ['step 1', 'step 2', 'step 3', 'done']
 4 saved a : 10 checkpoints
@@ -160,13 +160,13 @@ A LangGraph drawing: `__start__` leads to a router node `detect_and_route`, whos
 
 #flashcards/ml/concept #flashcards/topic/agents-rag What is a reducer in LangGraph?::The rule that merges a node's returned value into a state field. The default replaces the old value, and `operator.add` on a list adds the new items to the end.
 
-#flashcards/ml/formula #flashcards/topic/agents-rag How does LangGraph update a state field after a node runs, and what does each symbol mean?
+#flashcards/ml/concept #flashcards/topic/agents-rag How does LangGraph update a state field after a node runs, and what does each symbol mean?
 ?
-$$s_{t+1}[k]=f_k\big(s_t[k],\,u_t[k]\big)$$
-- $s_t[k]$: the value of field $k$ before step $t$.
-- $u_t[k]$: the value a node returned for that field (an unreturned field stays unchanged).
-- $f_k$: the merge rule (reducer) for field $k$; the default keeps the new value.
-- $s_{t+1}[k]$: the value after the step.
+After each step, every field k of the state gets a new value from its own rule f_k, applied to the field's old value and the node's update.
+- s_t[k]: the value of field k before step t.
+- u_t[k]: the value a node returned for that field (an unreturned field stays unchanged).
+- f_k: the merge rule (reducer) for field k; the default keeps the new value.
+- s_(t+1)[k]: the value after the step.
 - Without an adding rule on a list field, each write replaces the whole list and earlier notes are lost.
 
 #flashcards/ml/example #flashcards/topic/agents-rag Field `log` is `['step 1']`, uses `operator.add`, and a node returns `['step 2']`. What is `log` after the step?::`['step 1', 'step 2']` (the lists are joined). A field `n` with the default rule, which was 1 and returned as 2, becomes 2.

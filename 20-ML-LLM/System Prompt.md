@@ -46,7 +46,7 @@ def render(msgs):
 
 
 print("1 no system message -> the template adds its own:", repr(render([user])[:75]))
-print("1 with my system    ->", repr(render([{"role": "system", "content": SYS}, user])[:75]))
+print("1 with my system ->", repr(render([{"role": "system", "content": SYS}, user])[:75]))
 print("1 tokens, no system:", len(tok(render([user]))["input_ids"]), "| with my system:", len(tok(render([{"role": "system", "content": SYS}, user]))["input_ids"]))
 
 RULE = "End every reply with the word DONE."
@@ -54,7 +54,7 @@ QUESTIONS = ["Name one colour.", "What is 2 plus 2?", "Who wrote Hamlet?", "What
              "What is the opposite of hot?", "How many days are in a week?", "Name an animal that swims."]
 
 
-def ask(system, question, rule_in_user=False):             # one local call; returns the reply text and its token count
+def ask(system, question, rule_in_user=False): # one local call; returns the reply text and its token count
     text = question + (" " + RULE if rule_in_user else "")
     msgs = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": text}]
     body = {"model": "qwen2.5:1.5b", "stream": False, "options": {"temperature": 0, "seed": 1, "num_predict": 120}, "messages": msgs}
@@ -68,8 +68,8 @@ for name, system, in_user in (("no rule", None, False), ("rule in system", RULE,
     done = sum(t.rstrip(" .!").endswith("DONE") for t, _ in out)
     print(f"2 {name:18}: ends with DONE in {done} of {len(QUESTIONS)}; mean reply {sum(n for _, n in out) / len(out):.1f} tokens; first: {out[0][0]!r}")
 
-base = len(tok(render([{"role": "system", "content": ""}, user]))["input_ids"])   # an empty system message, so the default is not counted
-for n_words in (10, 100, 400):                       # what a long system prompt costs: it is re-read on every turn
+base = len(tok(render([{"role": "system", "content": ""}, user]))["input_ids"]) # an empty system message, so the default is not counted
+for n_words in (10, 100, 400): # what a long system prompt costs: it is re-read on every turn
     s = " ".join(["Be kind."] * (n_words // 2))
     n = len(tok(render([{"role": "system", "content": s}, user]))["input_ids"]) - base
     print(f"3 system prompt of {n_words:>3} words adds {n} tokens to every call; over 20 turns that is {20 * n} tokens read again")
@@ -77,12 +77,12 @@ for n_words in (10, 100, 400):                       # what a long system prompt
 What it printed (transformers 4.46.3, Ollama 0.21.2, Python 3.9.6, CPU only, `temperature` 0, `seed` 1):
 ```
 1 no system message -> the template adds its own: '<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpfu'
-1 with my system    -> '<|im_start|>system\nYou are a pirate. Reply in one short sentence.<|im_end|>'
+1 with my system -> '<|im_start|>system\nYou are a pirate. Reply in one short sentence.<|im_end|>'
 1 tokens, no system: 33 | with my system: 28
-2 no rule           : ends with DONE in 0 of 8; mean reply 13.9 tokens; first: 'Blue is one of the colors.'
-2 rule in system    : ends with DONE in 5 of 8; mean reply 8.5 tokens; first: 'Blue is a color. DONE'
+2 no rule : ends with DONE in 0 of 8; mean reply 13.9 tokens; first: 'Blue is one of the colors.'
+2 rule in system : ends with DONE in 5 of 8; mean reply 8.5 tokens; first: 'Blue is a color. DONE'
 2 rule in user turn : ends with DONE in 8 of 8; mean reply 7.5 tokens; first: 'Blue DONE.'
-3 system prompt of  10 words adds 15 tokens to every call; over 20 turns that is 300 tokens read again
+3 system prompt of 10 words adds 15 tokens to every call; over 20 turns that is 300 tokens read again
 3 system prompt of 100 words adds 150 tokens to every call; over 20 turns that is 3000 tokens read again
 3 system prompt of 400 words adds 600 tokens to every call; over 20 turns that is 12000 tokens read again
 ```
@@ -94,20 +94,18 @@ What to look for:
 ## 🔴 4. Deep / formal
 **Share of the window.** Let $s$ be the token length of the system prompt and $W$ the size of the [[Context Window]]. The share of the window used before the user says anything is
 
-$$
-f=\frac{s}{W}
-$$
+The share of the context window taken by the system prompt (f) = its tokens (s) ÷ the window size in tokens (W).
 
-**Where:**
-- $f$ is the fraction of the window the system prompt takes, from 0 to 1 (above 1 means it does not fit).
-- $s$ is the length of the system prompt in tokens, counted after the chat template wraps it.
-- $W$ is the window the model runs with, in tokens (in my setup set by `num_ctx` in Ollama, see [[Context Window]]).
-- **Matters:** what is left for the chat and the answer is $W-s$. A big $s$ with a small $W$ leaves little room, or none.
+**Terms:**
+- f is the fraction of the window the system prompt takes, from 0 to 1 (above 1 means it does not fit).
+- s is the length of the system prompt in tokens, counted after the chat template wraps it.
+- W is the window the model runs with, in tokens (in my setup set by `num_ctx` in Ollama, see [[Context Window]]).
+- **Matters:** what is left for the chat and the answer is W-s. A big s with a small W leaves little room, or none.
 
-**Example (tiny numbers):** $W=4096$.
-- $s=150$ (my 100-word prompt): $f=150/4096=\mathbf{0.037}$, about 4 percent.
-- $s=600$ (my 400-word prompt): $f=600/4096=\mathbf{0.146}$, about 15 percent.
-- With a window of 512 and $s=600$: $f=600/512=\mathbf{1.17}$. It does not fit.
+**Example (tiny numbers):** W=4096.
+- s=150 (my 100-word prompt): f=150/4096=0.037, about 4 percent.
+- s=600 (my 400-word prompt): f=600/4096=0.146, about 15 percent.
+- With a window of 512 and s=600: f=600/512=1.17. It does not fit.
 - Meaning: the same prompt is cheap in a big window and impossible in a small one.
 
 **Further notes:**
@@ -138,13 +136,13 @@ $$
 
 #flashcards/ml/reverse #flashcards/topic/llm System prompt:::The first message in a chat, written by the developer, that sets the model's role and rules. The model reads it again on every turn.
 
-#flashcards/ml/formula #flashcards/topic/llm Write the share of the window a system prompt uses and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm Write the share of the window a system prompt uses and explain each symbol.
 ?
-$$f=\frac{s}{W}$$
-- $f$: the fraction of the window used by the system prompt, from 0 to 1 (above 1 means it does not fit).
-- $s$: the system prompt's length in tokens, counted after the chat template wraps it.
-- $W$: the size of the context window in tokens.
-- What is left for the chat and the answer is $W-s$.
+The share of the context window taken by the system prompt (f) = its tokens (s) ÷ the window size in tokens (W).
+- f: the fraction of the window used by the system prompt, from 0 to 1 (above 1 means it does not fit).
+- s: the system prompt's length in tokens, counted after the chat template wraps it.
+- W: the size of the context window in tokens.
+- What is left for the chat and the answer is W-s.
 
 #flashcards/ml/example #flashcards/topic/llm With $W=4096$, what share does a system prompt of 150 tokens take, and one of 600?::150 / 4096 = 0.037 (about 4 percent). 600 / 4096 = 0.146 (about 15 percent). With a window of 512, 600 / 512 = 1.17, so it does not fit (my arithmetic).
 

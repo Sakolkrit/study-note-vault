@@ -41,7 +41,7 @@ import math
 import numpy as np
 
 rng = np.random.RandomState(0)
-MAX_LEN, BLOCK, MEMORY = 2048, 16, 40_000       # longest allowed text, tokens per block, KV-cache slots on the GPU
+MAX_LEN, BLOCK, MEMORY = 2048, 16, 40_000 # longest allowed text, tokens per block, KV-cache slots on the GPU
 
 # a stream of requests: final length (prompt + answer) of each, mostly short, a few long
 lengths = np.clip(rng.lognormal(mean=5.3, sigma=0.8, size=5000), 20, MAX_LEN).astype(int)
@@ -57,19 +57,19 @@ blocks = np.ceil(lengths / BLOCK)
 slots_paged = blocks * BLOCK
 fit_paged = int(MEMORY // slots_paged.mean())
 used_paged = lengths.sum() / slots_paged.sum()
-print(f"paged blocks:    about {fit_paged} requests fit; slots holding tokens {used_paged:.1%}; waste is only the last block: {1 - used_paged:.1%}")
+print(f"paged blocks: about {fit_paged} requests fit; slots holding tokens {used_paged:.1%}; waste is only the last block: {1 - used_paged:.1%}")
 print(f"-> {fit_paged / fit_static:.1f} times as many requests in the same memory")
 
 # a block table: logical block number -> physical block number, handed out from a free list
 free = list(range(100))
 rng.shuffle(free)
-table = [free.pop() for _ in range(math.ceil(37 / BLOCK))]       # a request with 37 tokens needs 3 blocks
+table = [free.pop() for _ in range(math.ceil(37 / BLOCK))] # a request with 37 tokens needs 3 blocks
 print("37 tokens -> blocks needed:", len(table), "| block table (logical 0,1,2 -> physical):", table)
 
 # sharing: 4 answers sampled from one prompt of 100 tokens, each answer 200 tokens
 prompt, answer, n = 100, 200, 4
 copy_all = n * math.ceil((prompt + answer) / BLOCK)
-shared = prompt // BLOCK + n * math.ceil((prompt % BLOCK + answer) / BLOCK)   # full prompt blocks are shared; the half-full one is copied
+shared = prompt // BLOCK + n * math.ceil((prompt % BLOCK + answer) / BLOCK) # full prompt blocks are shared; the half-full one is copied
 print(f"4 samples of one prompt: {copy_all} blocks if each copies the prompt, {shared} if the full prompt blocks are shared")
 ```
 
@@ -80,20 +80,18 @@ What it printed: lengths have median 196 and mean 269 (limit 2048). Reserving th
 ## 🔴 4. Deep / formal
 The memory the cache needs for one token follows from the model's shape:
 
-$$
-\text{bytes per token}=2\times H\times L\times b
-$$
+Bytes of cache per token = 2 (key and value) × hidden size (H) × number of layers (L) × bytes per number (b).
 
-**Where:**
-- $2$ is for the key and the value, both stored.
-- $H$ is the hidden size, the number of values in one token's vector (5120 for the 13-billion-parameter OPT model in the paper).
-- $L$ is the number of layers (40 in the paper's example). Each layer keeps its own keys and values.
-- $b$ is bytes per number (2 for FP16, a number format with 16 bits).
-- **Matters:** the bill grows with each of the four factors, and with the length of the text. So the cache of one long request is large, and memory, not arithmetic, limits how many requests fit ([[LLM Inference]], [[Grouped-Query Attention]] which shrinks $H$ for keys and values).
+**Terms:**
+- 2 is for the key and the value, both stored.
+- H is the hidden size, the number of values in one token's vector (5120 for the 13-billion-parameter OPT model in the paper).
+- L is the number of layers (40 in the paper's example). Each layer keeps its own keys and values.
+- b is bytes per number (2 for FP16, a number format with 16 bits).
+- **Matters:** the bill grows with each of the four factors, and with the length of the text. So the cache of one long request is large, and memory, not arithmetic, limits how many requests fit ([[LLM Inference]], [[Grouped-Query Attention]] which shrinks H for keys and values).
 
 **Example (tiny numbers):** the paper's OPT model.
-- Per token: $2\times5120\times40\times2=\mathbf{819{,}200}$ bytes, which the paper rounds to 800 KB.
-- For a request of 2048 tokens: $819{,}200\times2048\approx1.68\times10^{9}$ bytes, about 1.6 GiB (the paper says "as much as 1.6 GB").
+- Per token: 2×5120×40×2=819,200 bytes, which the paper rounds to 800 KB.
+- For a request of 2048 tokens: 819,200×2048≈1.68×10^9 bytes, about 1.6 GiB (the paper says "as much as 1.6 GB").
 - Meaning: a GPU with a few tens of GB left over for the cache can hold only a few tens of such requests. This is why wasting 60 to 80% of that memory (the paper's measure) matters.
 
 **Further notes (paper, section 6, read; numbers are the paper's, not mine):**
@@ -123,13 +121,13 @@ $$
 
 #flashcards/ml/reverse #flashcards/topic/llm-serving vLLM:::A serving system for LLMs that cuts each chat's KV cache into small blocks (PagedAttention), shares blocks between chats with the same text, and uses a scheduler that lets new chats join as soon as there is room.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving Write the KV-cache bytes per token and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm-serving Write the KV-cache bytes per token and explain each symbol.
 ?
-$$\text{bytes per token}=2\times H\times L\times b$$
-- $2$: key and value are both stored.
-- $H$: the hidden size, the number of values in one token's vector (5120 for the 13-billion-parameter OPT model in the vLLM paper).
-- $L$: the number of layers (40 in the paper's example). Each layer keeps its own keys and values.
-- $b$: bytes per number (2 for FP16).
+Bytes of cache per token = 2 (key and value) × hidden size (H) × number of layers (L) × bytes per number (b).
+- 2: key and value are both stored.
+- H: the hidden size, the number of values in one token's vector (5120 for the 13-billion-parameter OPT model in the vLLM paper).
+- L: the number of layers (40 in the paper's example). Each layer keeps its own keys and values.
+- b: bytes per number (2 for FP16).
 - The bill grows with all four factors and with the text length, so memory, not arithmetic, limits how many requests fit.
 
 #flashcards/ml/example #flashcards/topic/llm-serving For the paper's OPT model ($H=5120$, $L=40$, FP16), what are the bytes per token and for a 2048-token request?::Per token $2\times5120\times40\times2=819{,}200$ bytes (the paper rounds to 800 KB). For 2048 tokens about $1.68\times10^9$ bytes, around 1.6 GiB (the paper says as much as 1.6 GB).

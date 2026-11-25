@@ -30,18 +30,18 @@ Running an AI model by hand is like building a toy from a pile of parts, with a 
 - **Where models live.** A model is a *manifest* (a small JSON file) that lists *layers*, and each layer is a file named by its hash. On this PC the models folder is set by the environment variable `OLLAMA_MODELS` (here `D:\Ollama\.ollama\models`). The manifest for `qwen2.5:0.5b` lists four layers: the model (397,807,936 bytes, a GGUF file), a system message (68 bytes), the template (1,482 bytes) and the licence (11,343 bytes). The layout is similar to how Docker stores images (my observation, not something I checked in the docs).
 - **Its own template.** `ollama show --modelfile qwen2.5:0.5b` printed a `TEMPLATE` written in Go's template language, with fields like `.System` and `.Messages`. It is not the same text as the Jinja template stored inside the GGUF file ([[Chat Template]]).
 - **The Modelfile** is a small recipe file for building your own model. The docs list: `FROM` (a model name, or a path to a GGUF file or a Safetensors folder), `PARAMETER`, `TEMPLATE`, `SYSTEM`, `LICENSE`, `MESSAGE` (example turns), `REQUIRES` and `CAPABILITY`. The docs give these defaults: temperature 0.8, `num_ctx` 2048, `top_k` 40, `top_p` 0.9, `seed` 0, and `num_predict` -1 (no limit). **On this PC `ollama ps` showed a context of 32768 for the model, not 2048, and I did not find out why** (the docs page may describe different defaults from my version, 0.21.2).
-- **The web API** (from the docs, through a page summary): `POST /api/chat` takes `model`, `messages`, `stream` and `options`; `POST /api/generate` takes a single `prompt`; `GET /api/tags` lists installed models; `POST /api/show` gives details; `GET /api/ps` lists loaded models. `keep_alive` is how long the model stays loaded and defaults to 5 minutes. When streaming is off, the reply carries counts and durations (all in nanoseconds), from which you get the speed (equation 1).
+- **The web API** (from the docs, through a page summary): `POST /api/chat` takes `model`, `messages`, `stream` and `options`; `POST /api/generate` takes a single `prompt`; `GET /api/tags` lists installed models; `POST /api/show` gives details; `GET /api/ps` lists loaded models. `keep_alive` is how long the model stays loaded and defaults to 5 minutes. When streaming is off, the reply carries counts and durations (all in nanoseconds), from which you get the speed (see the rule below).
 
-$$\text{tokens per second}=\frac{\text{eval\_count}}{\text{eval\_duration}}\times10^{9}$$
+Tokens per second = tokens written (eval_count) ÷ time spent writing them (eval_duration, in nanoseconds), times a billion to turn nanoseconds into seconds.
 
-**Where:**
-- $\text{eval\_count}$: how many tokens the model wrote in the answer.
-- $\text{eval\_duration}$: the time spent writing them, in nanoseconds (billionths of a second).
-- $10^{9}$: turns nanoseconds into seconds.
+**Terms:**
+- eval_count: how many tokens the model wrote in the answer.
+- eval_duration: the time spent writing them, in nanoseconds (billionths of a second).
+- 10^9: turns nanoseconds into seconds.
 
 **Matters:** it measures only the writing. The load time and the time to read your prompt are other fields (`load_duration`, `prompt_eval_duration`), so if you divide by the total time instead, the speed looks lower than the model's real writing speed.
 
-**Example (tiny numbers):** a reply of 8 tokens with `eval_duration` 207,630,900 ns. That is 0.2076 s, and $8/0.2076=38.5$ tokens per second. A 100-token reply at the same speed would take about 2.6 s.
+**Example (tiny numbers):** a reply of 8 tokens with `eval_duration` 207,630,900 ns. That is 0.2076 s, and 8/0.2076=38.5 tokens per second. A 100-token reply at the same speed would take about 2.6 s.
 
 **`ollama_demo.py`** (standard library only, plus the `ollama` command)
 ```python
@@ -71,7 +71,7 @@ open(path, "w").write(modelfile)
 subprocess.run(["ollama", "create", "pirate-test", "-f", path], check=True, capture_output=True)
 ask.update(model="pirate-test")
 print("pirate:", call("/api/chat", ask)["message"]["content"])
-subprocess.run(["ollama", "rm", "pirate-test"], check=True, capture_output=True)   # clean up the model I made
+subprocess.run(["ollama", "rm", "pirate-test"], check=True, capture_output=True) # clean up the model I made
 print("after rm:", [m["name"] for m in call("/api/tags")["models"]])
 print("loaded now:", [(m["name"], m["size"]) for m in call("/api/ps")["models"]])
 ```
@@ -123,12 +123,12 @@ Ollama in a Linux terminal: the command `ollama run llama3`, a question about Wi
 
 #flashcards/ml/concept #flashcards/topic/llm-serving Which web address and port does Ollama use, and what is the default `keep_alive`?::`http://localhost:11434`, and 5 minutes (from the API docs summary). After that the model is unloaded from memory.
 
-#flashcards/ml/formula #flashcards/topic/llm-serving Write how to get tokens per second from an Ollama reply, and explain each symbol.
+#flashcards/ml/concept #flashcards/topic/llm-serving Write how to get tokens per second from an Ollama reply, and explain each symbol.
 ?
-$$\text{tokens per second}=\frac{\text{eval\_count}}{\text{eval\_duration}}\times10^{9}$$
-- $\text{eval\_count}$: how many tokens the model wrote in the answer.
-- $\text{eval\_duration}$: the time spent writing them, in nanoseconds.
-- $10^{9}$: turns nanoseconds into seconds.
+Tokens per second = tokens written (eval_count) ÷ time spent writing them (eval_duration, in nanoseconds), times a billion to turn nanoseconds into seconds.
+- eval_count: how many tokens the model wrote in the answer.
+- eval_duration: the time spent writing them, in nanoseconds.
+- 10^9: turns nanoseconds into seconds.
 - It measures only the writing. Load time and prompt-reading time are separate fields, so dividing by the total time would make the speed look lower.
 
 #flashcards/ml/example #flashcards/topic/llm-serving A reply had `eval_count` 8 and `eval_duration` 207,630,900 ns. What is the speed?::207,630,900 ns is 0.2076 s, and 8 / 0.2076 = 38.5 tokens per second (my arithmetic, matching the demo's output).
