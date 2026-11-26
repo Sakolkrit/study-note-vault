@@ -46,6 +46,7 @@ One note per project: goal, result, exact steps, what went wrong and what was no
 
 - [[Local CPU Chatbot]]
 - [[LoRA Fine-tuning on CPU]]
+- [[LLM Evaluation Lab]]
 
 ## Agents
 
