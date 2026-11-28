@@ -89,7 +89,7 @@ smooth L1 total loss 4.530 | outlier pull 1.0 of 1.4 = 71.4%
 **Summary: what the table shows.** With L2, the single outlier decides 92.6% of the step. With smooth L1 it decides 71.4%, still most of it (the three small errors have small gradients here) but its pull is capped at 1.0 instead of 5.0. L1 treats all errors equally, so the outlier's share falls to 25%, but L1's gradient does not shrink near zero, which makes its steps jumpy at the end. Caution: three numbers and one outlier; this shows the shape of the idea, not how much it helps a real detector.
 
 ## 🔴 4. Deep / formal
-**Smooth L1 loss** of one error $x$ (from general knowledge; [[Faster R-CNN 2015]] says its box loss uses the "smooth L1" loss "defined in" [[Fast R-CNN 2015]] and does not write it out):
+**Smooth L1 loss** of one error $x$ (the Fast R-CNN paper's equations 2 and 3, section 2.3, which I read in [[Fast R-CNN 2015]]; [[Faster R-CNN 2015]] only says its box loss uses the "smooth L1" loss "defined in" Fast R-CNN):
 
 $$
 \mathrm{smooth}_{L_1}(x)=\begin{cases}0.5\,x^{2} & \text{if } |x|<1\\ |x|-0.5 & \text{otherwise}\end{cases}
@@ -107,7 +107,7 @@ $$
 - Check at the switch: for $|x|=1$ both lines give 0.5, so there is no jump.
 - The answer means: the big error costs 56 times the small one (2.5 divided by 0.045, my arithmetic), against 100 times with the squared error (4.5 against 0.045), so the large error is punished less sharply than under L2.
 
-**Why this shape.** L2 gives a smooth, easy-to-optimise loss but lets outliers dominate. L1 resists outliers but has a constant gradient even near zero, so the weights keep jumping around the optimum. Smooth L1 takes the smooth part of L2 near zero and the bounded slope of L1 far away. The Fast R-CNN paper's reason, as I remember it and have not checked, is that it is less sensitive to outliers than the L2 loss used earlier, and needs less tuning of the learning rate to avoid exploding gradients.
+**Why this shape.** L2 gives a smooth, easy-to-optimise loss but lets outliers dominate. L1 resists outliers but has a constant gradient even near zero, so the weights keep jumping around the optimum. Smooth L1 takes the smooth part of L2 near zero and the bounded slope of L1 far away. The Fast R-CNN paper's reason (section 2.3): it is "a robust L1 loss that is less sensitive to outliers than the L2 loss used in R-CNN and SPPnet", and "when the regression targets are unbounded, training with L2 loss can require careful tuning of learning rates in order to prevent exploding gradients. Eq. 3 eliminates this sensitivity." The paper gives no ablation of the loss itself.
 
 **Relation to other losses:** with a different scale the same shape is the Huber loss (general knowledge; I did not check the exact relation of the constants).
 
@@ -117,24 +117,24 @@ $$
 - Errors are in offset units (shifts as fractions of the anchor size and log size ratios), so the same 1.0 means different pixel amounts for small and large anchors.
 
 **What came before, and how this improved on it:**
-- **Before:** a squared-error (L2) loss on box offsets (R-CNN-style regression; from memory, not checked).
+- **Before:** a squared-error (L2) loss on box offsets, "the L2 loss used in R-CNN and SPPnet" (Fast R-CNN paper, section 2.3).
 - **Its limit:** one badly wrong box produces a gradient that grows with its error, which can dominate or destabilise training. In my demo an error of 5 pulled 5.0 against 1.0 once capped.
 - **What changed:** replace the loss with smooth L1, which is the same for small errors and linear for large ones.
-- **How much better:** in my demo the outlier's gradient fell from 5.0 to 1.0 (5 times) and the total loss from 12.53 to 4.53. This is the effect on the loss, not an accuracy gain; I did not train a detector, and the paper's own claim is only from memory.
+- **How much better:** in my demo the outlier's gradient fell from 5.0 to 1.0 (5 times) and the total loss from 12.53 to 4.53. This is the effect on the loss, not an accuracy gain; I did not train a detector, and the Fast R-CNN paper reports no ablation of this loss against L2 (I read its body; it only states the reason above).
 
 ## Related
 [[Fast R-CNN 2015]] · [[Faster R-CNN 2015]] · [[Anchor Box]] · [[Object Detection]] · [[Loss Function]] · [[Gradient Descent]] · [[Intersection over Union]] · [[Cross-Entropy Loss]]
 
 ## Sources
 - My own run: `smoothl1_demo.py` (Python 3.9.6, PyTorch 2.8.0), checked against `torch.nn.functional.smooth_l1_loss`.
-- [[Faster R-CNN 2015]] as read there: it uses smooth L1 for its box loss and defers the definition to Fast R-CNN. The formula, the Huber relation and the Fast R-CNN paper's motivation are general knowledge or memory, not checked against the paper (the Fast R-CNN note is abstract-only). The note was not opened in Obsidian.
+- [[Fast R-CNN 2015]] (paper body read, section 2.3, equations 2 and 3: the formula, the "robust L1 loss" wording and the exploding-gradient reason) and [[Faster R-CNN 2015]] (it uses smooth L1 for its box loss and defers the definition to Fast R-CNN). The Huber relation is general knowledge, not checked. The note was not opened in Obsidian.
 
 ## Flashcards
 #flashcards/ml
 
 #flashcards/ml/reverse #flashcards/topic/vision Smooth L1 loss:::An error penalty that is half the squared error for small errors and the absolute error minus one half for large ones, so the gradient is capped at 1.
 
-#flashcards/ml/concept #flashcards/topic/vision Why do detectors use smooth L1 loss for box offsets?::It behaves like squared error for small errors (smooth near zero, gradient shrinks) and like absolute error for large ones (gradient capped at 1), so a few badly wrong boxes cannot dominate training (general knowledge).
+#flashcards/ml/concept #flashcards/topic/vision Why do detectors use smooth L1 loss for box offsets?::It behaves like squared error for small errors (smooth near zero, gradient shrinks) and like absolute error for large ones (gradient capped at 1), so a few badly wrong boxes cannot dominate training (Fast R-CNN paper, 2.3: less sensitive to outliers than L2 and avoids exploding gradients with unbounded targets).
 
 #flashcards/ml/formula #flashcards/topic/vision Write the smooth L1 loss and explain each part.
 ?
