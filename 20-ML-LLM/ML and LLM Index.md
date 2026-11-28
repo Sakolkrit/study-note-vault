@@ -53,6 +53,7 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[Chatbot Arena]]
 - 🟢 [[Confusion Matrix]]
 - 🔵 [[Cross-Validation]]
+- 🔵 [[Data Contamination]]
 - 🔵 [[Evaluation Metrics]]
 - 🔵 [[F1 Score]]
 - 🟠 [[Interpretability]]
@@ -60,6 +61,7 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[Learning Curve]]
 - 🔵 [[Log-Likelihood]]
 - 🔵 [[Mean Average Precision]]
+- 🔵 [[MMLU]]
 - 🔵 [[Pass at k]]
 - 🔵 [[Permutation Importance]]
 - 🔵 [[Perplexity]]
@@ -118,10 +120,12 @@ Every concept note about machine learning, deep learning, language models and ho
 
 ## Vision
 
+- 🔵 [[Anchor Box]]
 - 🟠 [[CLIP]]
 - 🔵 [[Convolution]]
 - 🟠 [[Convolutional Neural Network]]
 - 🔵 [[Feature Map]]
+- 🟠 [[Feature Pyramid Network]]
 - 🔵 [[Image Classification]]
 - 🔵 [[Image Segmentation]]
 - 🔵 [[Intersection over Union]]
@@ -132,6 +136,10 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[Pooling]]
 - 🔵 [[Receptive Field]]
 - 🟠 [[ResNet]]
+- 🔵 [[RoI Pooling]]
+- 🔵 [[RoIAlign]]
+- 🔵 [[Smooth L1 Loss]]
+- 🔵 [[Transposed Convolution]]
 - 🔵 [[VGG]]
 - 🟠 [[Vision Transformer]]
 
@@ -285,6 +293,7 @@ Every concept note about machine learning, deep learning, language models and ho
 - 🔵 [[Context Rot]]
 - 🟠 [[Contextual Retrieval]]
 - 🟠 [[Embedding Model]]
+- 🟠 [[Hermes Agent]]
 - 🔵 [[LangChain]]
 - 🟠 [[LangGraph]]
 - 🟠 [[Model Context Protocol]]

@@ -42,6 +42,7 @@ Linear algebra, calculus and probability, the maths that the machine learning no
 - 🔵 [[Monte Carlo]]
 - 🟢 [[Normal Distribution]]
 - 🟢 [[Probability]]
+- 🔵 [[Standard Error]]
 - 🟢 [[Variance]]
 
 ## Information theory
